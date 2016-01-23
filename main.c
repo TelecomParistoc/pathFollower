@@ -1,9 +1,7 @@
 #include "pathFollower.h"
-#include <sstream>
 
 int main() {
-	std::stringstream s;
-	s << 1 << ' ' << 5 << 5;
-	//follow(s);
+	float path[8] = {10, 10, 50, 10, 60, 100, 20, 100};
+	follow(path, 8);
 	return 0;
 }

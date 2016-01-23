@@ -2,11 +2,13 @@
 #define PATHFOLLOWER_H
 
 #include "point.h"
-#include <sstream>
 
-void follow(std::stringstream s);
+void follow(float path[], int pathLength);
 double getAngle(Point, Point);
 double getDistance(Point, Point);
 
+void standardCallback(struct motionElement* element);
+void rotateCallback(struct motionElement* element);
+void endCallback(struct motionElement* element);
 
 #endif
