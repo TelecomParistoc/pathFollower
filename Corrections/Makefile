@@ -13,7 +13,7 @@ EXEC_DEBUG =$(RELEASE_DEBUG_DIR)/moveCar
 
 CC = g++
 CFLAGS = -Wall -Werror -O1 -std=c++11
-LDFLAGS =
+LDFLAGS = -lrobotdriver
 LDFLAGS_DEBUG = -g
 
 
@@ -39,4 +39,3 @@ clean :
 	@rm -rf $(OBJ_DIR)
 	@rm -rf $(RELEASE_DIR)
 	@rm -rf $(RELEASE_DEBUG_DIR)
-
