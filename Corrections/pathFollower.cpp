@@ -37,11 +37,11 @@ void PathFollower::followPath(const std::vector<float>& path)
         return;
 
     std::pair<float,float> angleDistance = getAngleDistance(curPosX,curPosY,path[0],path[1]);
-    turnOf(angleDistance.first, &PathFollower::standardCallback);
+    turnOf(angleDistance.first, &callback1);
     curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
 
     queueSpeedChange(0.3, nullptr);
-    queueStopAt(angleDistance.second, static_cast<(void(*)(struct motionElement*))>(ptfptr2));
+    queueStopAt(angleDistance.second, &callback2);
 
     for(unsigned int i=2;i<path.size();i+=2)
     {
@@ -51,11 +51,11 @@ void PathFollower::followPath(const std::vector<float>& path)
         curPosY = path[i+1];
 
         queueSpeedChange(0.3, nullptr);
-		queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
+		queueStopAt(angleDistance.second, &callback2);
     }
 
     queueSpeedChange(0.3, nullptr);
-	queueStopAt(angleDistance.second, &PathFollower::endCallback);
+	queueStopAt(angleDistance.second, &callback3);
 }
 
 std::pair<float,float> PathFollower::getAngleDistance(float x1, float y1, float x2, float y2)
@@ -99,3 +99,18 @@ void PathFollower::rotateCallback(struct motionElement* element)
 
 void PathFollower::endCallback(struct motionElement* element)
 {}
+
+void callback1()
+{
+    PathFollower::standardCallback();
+}
+
+void callback2(struct motionElement* element)
+{
+    PathFollower::rotateCallback(element);
+}
+
+void callback3(struct motionElement* element)
+{
+    PathFollower::endCallback(element);
+}

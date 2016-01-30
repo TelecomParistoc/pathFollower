@@ -36,5 +36,9 @@ class PathFollower
         static std::list<float> angles;
 };
 
+void callback1();
+void callback2(struct motionElement* element);
+void callback3(struct motionElement* element);
+
 
 #endif
