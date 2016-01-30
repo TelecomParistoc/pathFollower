@@ -25,9 +25,9 @@ class PathFollower
 
         static std::pair<float,float> getAngleDistance(float x1, float y1, float x2, float y2);
 
-        void standardCallback();
-        void rotateCallback(struct motionElement* element);
-        void endCallback(struct motionElement* element);
+        static void standardCallback();
+        static void rotateCallback(struct motionElement* element);
+        static void endCallback(struct motionElement* element);
 
     private:
         static float curPosX, curPosY;
@@ -35,10 +35,6 @@ class PathFollower
 
         static std::list<float> angles;
 };
-
-void callback1();
-void callback2(struct motionElement* element);
-void callback3(struct motionElement* element);
 
 
 #endif
