@@ -93,7 +93,7 @@ void PathFollower::standardCallback(void*)
 
 void PathFollower::rotateCallback(struct motionElement* element)
 {
-	turnOf(angles.front(), PathFollower::standardCallback);
+	turnOf(angles.front(), &PathFollower::standardCallback);
 	angles.pop_front();
 }
 
