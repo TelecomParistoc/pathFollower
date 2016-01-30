@@ -42,7 +42,7 @@ void PathFollower::followPath(const std::vector<float>& path)
 
     queueSpeedChange(0.3, nullptr);
     queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
-
+    std::cout<<"1 : "<<angleDistance.first<<" "<<angleDistance.second<<std::endl;
     for(unsigned int i=2;i<path.size();i+=2)
     {
         std::pair<float,float> angleDistance = getAngleDistance(path[i-2],path[i-1],path[i],path[i+1]);
@@ -52,6 +52,7 @@ void PathFollower::followPath(const std::vector<float>& path)
 
         queueSpeedChange(0.3, nullptr);
 		queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
+        std::cout<<i/2<<" : "<<angleDistance.first<<" "<<angleDistance.second<<std::endl;
     }
 
     queueSpeedChange(0.3, nullptr);

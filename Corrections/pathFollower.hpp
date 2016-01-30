@@ -3,6 +3,7 @@
 
 
 #include <functional>
+#include <iostream>
 #include <vector>
 #include <cmath>
 #include <list>
