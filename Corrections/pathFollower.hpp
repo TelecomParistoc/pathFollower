@@ -29,13 +29,12 @@ class PathFollower
 
         static void standardCallback();
         static void rotateCallback(struct motionElement* element);
-        static void endCallback(struct motionElement* element);
 
     private:
         static float curPosX, curPosY;
         static float curAngle;
 
-        static std::list<float> angles;
+        static std::list<float> angles, distances;
 };
 
 

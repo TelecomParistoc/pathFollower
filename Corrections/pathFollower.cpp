@@ -6,6 +6,7 @@ float PathFollower::curPosY = 0;
 float PathFollower::curAngle = 0;
 
 std::list<float> PathFollower::angles;
+std::list<float> PathFollower::distances;
 
 
 void PathFollower::setCurrentPositionDirection(float x, float y, float dirX, float dirY)
@@ -37,26 +38,21 @@ void PathFollower::followPath(const std::vector<float>& path)
         return;
 
     std::pair<float,float> angleDistance = getAngleDistance(curPosX,curPosY,path[0],path[1]);
-    turnOf(angleDistance.first, &PathFollower::standardCallback);
-    curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
+    angles.push_back(angleDistance.first);
+    distances.push_back(angleDistance.second);
 
-    queueSpeedChange(0.3, nullptr);
-    queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
-    std::cout<<"1 : "<<angleDistance.first<<" "<<angleDistance.second<<std::endl;
     for(unsigned int i=2;i<path.size();i+=2)
     {
         std::pair<float,float> angleDistance = getAngleDistance(path[i-2],path[i-1],path[i],path[i+1]);
         angles.push_back(angleDistance.first);
+        distances.push_back(angleDistance.second);
         curPosX = path[i];
         curPosY = path[i+1];
-
-        queueSpeedChange(0.3, nullptr);
-		queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
-        std::cout<<i/2<<" : "<<angleDistance.first<<" "<<angleDistance.second<<std::endl;
     }
 
-    queueSpeedChange(0.3, nullptr);
-	queueStopAt(angleDistance.second, &PathFollower::endCallback);
+    turnOf(angleDistance.first, &PathFollower::standardCallback);
+    angles.pop_front();
+    curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
 }
 
 std::pair<float,float> PathFollower::getAngleDistance(float x1, float y1, float x2, float y2)
@@ -92,13 +88,22 @@ std::pair<float,float> PathFollower::getAngleDistance(float x1, float y1, float 
 void PathFollower::standardCallback()
 {
 	setRobotDistance(0);
+    if(distances.size())
+    {
+        std::cout<<"going of "<<distances.front()<<std::endl;
+        queueStopAt(distances.front(), &PathFollower::rotateCallback);
+        distances.pop_front();
+    }
 }
 
 void PathFollower::rotateCallback(struct motionElement* element)
 {
-	turnOf(angles.front(), &PathFollower::standardCallback);
-	angles.pop_front();
-}
+    queueSpeedChange(0.3, nullptr);
 
-void PathFollower::endCallback(struct motionElement* element)
-{}
+    if(angles.size())
+    {
+        std::cout<<"turning of "<<angles.front()<<std::endl;
+        turnOf(angles.front(), &PathFollower::standardCallback);
+        angles.pop_front();
+    }
+}
