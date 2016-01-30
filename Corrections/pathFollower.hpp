@@ -27,7 +27,7 @@ class PathFollower
         static std::pair<float,float> getAngleDistance(float x1, float y1, float x2, float y2);
 
         static void standardCallback();
-        static void rotateCallback(struct motionElement* element);
+        void rotateCallback(struct motionElement* element);
         static void endCallback(struct motionElement* element);
 
     private:
