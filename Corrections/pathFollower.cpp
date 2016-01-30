@@ -14,8 +14,8 @@ void PathFollower::setCurrentPositionDirection(float x, float y, float dirX, flo
     curPosY = y;
 
     double dst = sqrt(dirX*dirX+dirY*dirY);
-    double acos1 = acos(dirX);
-    double asin1 = asin(dirY);
+    double acos1 = acos(dirX/dst);
+    double asin1 = asin(dirY/dst);
 
     if(fabs(fabs(acos1)-fabs(asin1))<=0.000000001)
         if(asin1>=0)
@@ -37,11 +37,11 @@ void PathFollower::followPath(const std::vector<float>& path)
         return;
 
     std::pair<float,float> angleDistance = getAngleDistance(curPosX,curPosY,path[0],path[1]);
-    turnOf(angleDistance.first, standardCallback);
+    turnOf(angleDistance.first, void (*)()&PathFollower::standardCallback);
     curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
 
     queueSpeedChange(0.3, nullptr);
-    queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
+    queueStopAt(angleDistance.second, PathFollower::rotateCallback);
 
     for(unsigned int i=2;i<path.size();i+=2)
     {
