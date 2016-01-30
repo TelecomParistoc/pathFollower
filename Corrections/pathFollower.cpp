@@ -36,11 +36,11 @@ void PathFollower::followPath(const std::vector<float>& path)
     if(path.size()<2)
         return;
 
-    void (PathFollower::* ptfptr) () = &PathFollower::standardCallback;
-    void (PathFollower::* ptfptr2) (struct motionElement*) = &PathFollower::rotateCallback;
+    typedef void (PathFollower::* ptfptr) () = &PathFollower::standardCallback;
+    typedef void (PathFollower::* ptfptr2) (struct motionElement*) = &PathFollower::rotateCallback;
 
     std::pair<float,float> angleDistance = getAngleDistance(curPosX,curPosY,path[0],path[1]);
-    turnOf(angleDistance.first, static_cast<void()()>(ptfptr));
+    turnOf(angleDistance.first, static_cast<void(*)()>(ptfptr));
     curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
 
     queueSpeedChange(0.3, nullptr);
