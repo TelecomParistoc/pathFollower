@@ -5,6 +5,9 @@
 
 int main()
 {
+    initMotionController();
+    setRobotDistance(0);
+    
     std::vector<float> pointsToVisit;
     pointsToVisit.push_back(200);
     pointsToVisit.push_back(900);
