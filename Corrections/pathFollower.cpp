@@ -50,7 +50,8 @@ void PathFollower::followPath(const std::vector<float>& path)
         curPosY = path[i+1];
     }
 
-    turnOf(angleDistance.first, &PathFollower::standardCallback);
+    turnOf(angles.front(), &PathFollower::standardCallback);
+    std::cout<<"turning of "<<angles.front()<<std::endl;
     angles.pop_front();
     curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
 }
