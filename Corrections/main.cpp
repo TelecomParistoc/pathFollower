@@ -3,7 +3,7 @@
 #include "pathFollower.hpp"
 
 
-int maint()
+int main()
 {
     std::vector<float> pointsToVisit;
     pointsToVisit.push_back(200);
@@ -18,4 +18,6 @@ int maint()
     pointsToVisit.push_back(1850);
 
     PathFollower::followPath(pointsToVisit);
+
+    return 0;
 }
