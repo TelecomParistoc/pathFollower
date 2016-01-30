@@ -13,7 +13,7 @@ int main()
     pointsToVisit.push_back(70);
     pointsToVisit.push_back(1200);
     pointsToVisit.push_back(900);
-    pointsToVisit.push_back(100);
+    pointsToVisit.push_back(200);
     pointsToVisit.push_back(200);
     pointsToVisit.push_back(900);
     pointsToVisit.push_back(1850);
