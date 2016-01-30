@@ -36,8 +36,8 @@ void PathFollower::followPath(const std::vector<float>& path)
     if(path.size()<2)
         return;
 
-    typedef void (PathFollower::* ptfptr) () = &PathFollower::standardCallback;
-    typedef void (PathFollower::* ptfptr2) (struct motionElement*) = &PathFollower::rotateCallback;
+    void (PathFollower::* ptfptr) () = &PathFollower::standardCallback;
+    void (PathFollower::* ptfptr2) (struct motionElement*) = &PathFollower::rotateCallback;
 
     std::pair<float,float> angleDistance = getAngleDistance(curPosX,curPosY,path[0],path[1]);
     turnOf(angleDistance.first, static_cast<void(*)()>(ptfptr));
