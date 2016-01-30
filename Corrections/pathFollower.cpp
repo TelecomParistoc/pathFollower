@@ -50,7 +50,7 @@ void PathFollower::followPath(const std::vector<float>& path)
         curPosY = path[i+1];
     }
 
-    setTargetheading(angles.front(), &PathFollower::standardCallback);
+    setTargetHeading(angles.front(), &PathFollower::standardCallback);
     std::cout<<"turning of "<<angles.front()<<std::endl;
     angles.pop_front();
     curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
@@ -103,7 +103,7 @@ void PathFollower::rotateCallback(struct motionElement* element)
     if(angles.size())
     {
         std::cout<<"turning of "<<angles.front()<<std::endl;
-        setTargetheading(angles.front(), &PathFollower::standardCallback);
+        setTargetHeading(angles.front(), &PathFollower::standardCallback);
         angles.pop_front();
     }
 }
