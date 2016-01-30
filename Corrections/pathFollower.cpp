@@ -82,7 +82,7 @@ std::pair<float,float> PathFollower::getAngleDistance(float x1, float y1, float 
         else
             angle1 = -acos1*180.f/M_PI;
 
-    std::cout<<x1<<" "<<y1<<" "<<x2<<" " <<y2<<" => "<<ret.second<<" avec  "<<acos1<<" "<<acos2<<" giving "<<angle1<<std::endl;
+    std::cout<<x1<<" "<<y1<<" "<<x2<<" " <<y2<<" => "<<ret.second<<" avec  "<<acos1<<" "<<asin1<<" giving "<<angle1<<std::endl;
 
     ret.first = angle1-getRobotHeading()-curAngle;
 
