@@ -86,7 +86,7 @@ std::pair<float,float> PathFollower::getAngleDistance(float x1, float y1, float 
 	return ret;
 }
 
-void PathFollower::standardCallback(void*)
+void PathFollower::standardCallback()
 {
 	setRobotDistance(0);
 }
