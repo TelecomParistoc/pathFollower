@@ -13,8 +13,9 @@ void PathFollower::setCurrentPositionDirection(float x, float y, float dirX, flo
     curPosX = x;
     curPosY = y;
 
-    double acos1 = acos(dirX/ret.second);
-    double asin1 = asin(dirY/ret.second);
+    double dst = sqrt(dirX*dirX+dirY*dirY);
+    double acos1 = acos(dirX);
+    double asin1 = asin(dirY);
 
     if(fabs(fabs(acos1)-fabs(asin1))<=0.000000001)
         if(asin1>=0)
@@ -39,22 +40,22 @@ void PathFollower::followPath(const std::vector<float>& path)
     turnOf(angleDistance.first, standardCallback);
     curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
 
-    queueSpeedChange(0.3, NULL);
+    queueSpeedChange(0.3, nullptr);
     queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
 
     for(unsigned int i=2;i<path.size();i+=2)
     {
         std::pair<float,float> angleDistance = getAngleDistance(path[i-2],path[i-1],path[i],path[i+1]);
-        angles.push_back(anglesDistance.first);
+        angles.push_back(angleDistance.first);
         curPosX = path[i];
         curPosY = path[i+1];
 
-        queueSpeedChange(0.3, NULL);
-		queueStopAt(anglesDistance.second, &PathFollower::rotateCallback);
+        queueSpeedChange(0.3, nullptr);
+		queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
     }
 
-    queueSpeedChange(0.3, NULL);
-	queueStopAt(anglesDistance.second, &PathFollower::endCallback);
+    queueSpeedChange(0.3, nullptr);
+	queueStopAt(angleDistance.second, &PathFollower::endCallback);
 }
 
 std::pair<float,float> PathFollower::getAngleDistance(float x1, float y1, float x2, float y2)
@@ -67,7 +68,7 @@ std::pair<float,float> PathFollower::getAngleDistance(float x1, float y1, float 
     double acos1 = acos((x2-x1)/ret.second);
     double asin1 = asin((y2-y1)/ret.second);
 
-    float angle1, angle2;
+    float angle1;
 
     if(fabs(fabs(acos1)-fabs(asin1))<=0.000000001)
         if(asin1>=0)
@@ -85,7 +86,7 @@ std::pair<float,float> PathFollower::getAngleDistance(float x1, float y1, float 
 	return ret;
 }
 
-void PathFollower::standardCallback(struct motionElement* element)
+void PathFollower::standardCallback(void*)
 {
 	setRobotDistance(0);
 }

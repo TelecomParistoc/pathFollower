@@ -6,8 +6,10 @@
 #include <cmath>
 #include <list>
 
-#include "headingcontroller.h"
-#include "speedcontroller.h"
+#include "robotdriver/headingcontroller.h"
+#include "robotdriver/motioncontroller.h"
+#include "robotdriver/speedcontroller.h"
+#include "robotdriver/motordriver.h"
 
 
 #ifndef
@@ -23,7 +25,7 @@ class PathFollower
 
         static std::pair<float,float> getAngleDistance(float x1, float y1, float x2, float y2);
 
-        void standardCallback(struct motionElement* element);
+        void standardCallback(void*);
         void rotateCallback(struct motionElement* element);
         void endCallback(struct motionElement* element);
 
