@@ -41,7 +41,7 @@ void PathFollower::followPath(const std::vector<float>& path)
     curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
 
     queueSpeedChange(0.3, nullptr);
-    queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
+    queueStopAt(angleDistance.second, std::bind<void(struct motionElement* element)>(&PathFollower::rotateCallback,this,std::placeholders::_2));
 
     for(unsigned int i=2;i<path.size();i+=2)
     {
@@ -51,7 +51,7 @@ void PathFollower::followPath(const std::vector<float>& path)
         curPosY = path[i+1];
 
         queueSpeedChange(0.3, nullptr);
-		queueStopAt(angleDistance.second, &PathFollower::rotateCallback);
+		queueStopAt(angleDistance.second, std::bind<void(struct motionElement* element)>(&PathFollower::rotateCallback,this,std::placeholders::_2));
     }
 
     queueSpeedChange(0.3, nullptr);
@@ -91,10 +91,10 @@ void PathFollower::standardCallback(void*)
 	setRobotDistance(0);
 }
 
-void PathFollower::rotateCallback(struct motionElement* element)
+void PathFollower::rotateCallback(PathFollower* p, struct motionElement* element)
 {
-	turnOf(angles.front(), standardCallback);
-	angles.pop_front();
+	turnOf(p->angles.front(), standardCallback);
+	p->angles.pop_front();
 }
 
 void PathFollower::endCallback(struct motionElement* element)

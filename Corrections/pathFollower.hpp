@@ -2,6 +2,7 @@
 #define PATHFOLLOWER_HPP
 
 
+#include <functional>
 #include <vector>
 #include <cmath>
 #include <list>
