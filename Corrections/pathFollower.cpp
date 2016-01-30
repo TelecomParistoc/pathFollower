@@ -91,6 +91,7 @@ void PathFollower::standardCallback()
     if(distances.size())
     {
         std::cout<<"going of "<<distances.front()<<std::endl;
+        queueSpeedChange(0.3, nullptr);
         queueStopAt(distances.front(), &PathFollower::rotateCallback);
         distances.pop_front();
     }
@@ -98,8 +99,6 @@ void PathFollower::standardCallback()
 
 void PathFollower::rotateCallback(struct motionElement* element)
 {
-    queueSpeedChange(0.3, nullptr);
-
     if(angles.size())
     {
         std::cout<<"turning of "<<angles.front()<<std::endl;
