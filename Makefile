@@ -12,7 +12,7 @@ EXEC_DEBUG =$(RELEASE_DEBUG_DIR)/moveCar
 
 
 CC = g++
-CFLAGS = -Wall -Werror -O1 -std=c++11
+CFLAGS = -Wall -Werror -Wextra -O1 -std=c++11
 LDFLAGS = -lrobotdriver
 LDFLAGS_DEBUG = -g
 
