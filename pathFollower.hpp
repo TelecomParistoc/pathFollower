@@ -12,7 +12,7 @@
 #include "robotdriver/motioncontroller.h"
 #include "robotdriver/speedcontroller.h"
 #include "robotdriver/motordriver.h"
-
+#include "pathfollower.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265
@@ -22,19 +22,24 @@
 class PathFollower
 {
     public:
-        static void setCurrentPositionDirection(float x, float y, float dirX, float dirY);
-        static void followPath(const std::vector<float>& path);
+        static void setCurrentPosition(double x, double y);
+        static void setCurrentPositionDirection(double x, double y, double dirX, double dirY);
+        static void setCurrentX(double value);
+        static void setCurrentY(double value);
+        
+        static void followPath(const struct robotPoint* points, const int length);
+        static void followPath(const std::vector<double>& path);
 
-        static std::pair<float,float> getAngleDistance(float x1, float y1, float x2, float y2);
+        static std::pair<double,double> getAngleDistance(double x1, double y1, double x2, double y2);
 
         static void standardCallback();
         static void rotateCallback(struct motionElement* element);
 
     private:
-        static float curPosX, curPosY;
-        static float curAngle;
+        static double curPosX, curPosY;
+        static double curAngle;
 
-        static std::list<float> angles, distances;
+        static std::list<double> angles, distances;
 };
 
 
