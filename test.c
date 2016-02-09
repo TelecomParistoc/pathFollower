@@ -3,6 +3,7 @@
  * developped by J. "JS" Schoumacher and A. Bonetti for Telecom Robotics */
 
 #include <pathfollower/pathfollower.h>
+#include <robotdriver/motioncontroller.h>
 #include <stdio.h>
 
 // called when the robot has reached the end of the path
@@ -11,7 +12,7 @@ void onTheEndOfTheRoad() {
 }
 
 int main() {
-    // the path the robot has to follow
+    // the path the robot has to follow ({x, y} in mm)
     struct robotPoint path[] = {
         {700, 70},
         {1200, 900},
