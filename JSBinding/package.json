@@ -1,0 +1,9 @@
+{
+  "name": "pathFollowerBinding",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "ffi": "^2.0.0",
+    "ref": "^1.3.1"
+  }
+}
