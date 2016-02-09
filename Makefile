@@ -1,33 +1,34 @@
 OBJ_DIR = obj
-SRC_DIR = .
-SRC = $(wildcard $(SRC_DIR)/*.cpp)
-OBJ := $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(SRC)))
-VPATH=.:src
+SRC = pathFollower.cpp pathfollower.c
+OBJ = pathFollower.o pathfollower.o
 
-
+PREFIX = /usr/local
+TARGET = libpathfollower.so
 RELEASE_DIR = bin
 RELEASE_DEBUG_DIR = binDebug
-EXEC =$(RELEASE_DIR)/moveCar
-EXEC_DEBUG =$(RELEASE_DEBUG_DIR)/moveCar
-
+EXEC =$(RELEASE_DIR)/$(TARGET)
+EXEC_DEBUG =$(RELEASE_DEBUG_DIR)/$(TARGET)
 
 CC = g++
-CFLAGS = -Wall -Werror -Wextra -O1 -std=c++11
-LDFLAGS = -lrobotdriver
-LDFLAGS_DEBUG = -g
+CFLAGS = -Wall -Werror -Wextra -O2 -std=c++11
+LDFLAGS = -lrobotdriver -fPIC -shared
+LDFLAGS_DEBUG = $(LDFLAGS) -g
 
+.PHONY: all test debug clean createDir install
 
 all: createDir $(EXEC)
-
-makeDebug: $(EXEC_DEBUG)
+test: test.c createDir $(EXEC)
+	$(CC) -o $(RELEASE_DIR)/$@ $< $(CFLAGS) -lpathfollower -lrobotdriver
+debug: createDir $(EXEC_DEBUG)
 
 $(EXEC): $(OBJ)
 	$(CC) -o $@ $^ $(LDFLAGS)
-
 $(EXEC_DEBUG): $(OBJ)
 	$(CC) -o $@ $^ $(LDFLAGS_DEBUG)
 
-$(OBJ_DIR)/%.o: %.cpp
+$(OBJ_DIR)/%.o: %.cpp %.hpp
+	$(CC) -o $@ -c $< $(CFLAGS)
+$(OBJ_DIR)/%.o: %.c %.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 createDir:
@@ -39,3 +40,12 @@ clean :
 	@rm -rf $(OBJ_DIR)
 	@rm -rf $(RELEASE_DIR)
 	@rm -rf $(RELEASE_DEBUG_DIR)
+
+install: $(EXEC)
+	mkdir -p $(DESTDIR)$(PREFIX)/lib
+	mkdir -p $(DESTDIR)$(PREFIX)/include/pathfollower/
+	cp $(EXEC) $(DESTDIR)$(PREFIX)/lib/
+	cp pathfollower.h $(DESTDIR)$(PREFIX)/include/pathfollower/
+	chmod 0755 $(DESTDIR)$(PREFIX)/lib/$(TARGET)
+	ldconfig
+	ldconfig -p | grep pathfollower
