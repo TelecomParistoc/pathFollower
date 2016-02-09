@@ -1,17 +1,19 @@
 #include "pathFollower.hpp"
-
+#include <robotdriver/motordriver.h>
+#include <robotdriver/headingcontroller.>
+#include <robotdriver/motioncontroller.h>
 
 double PathFollower::curPosX = 0;
 double PathFollower::curPosY = 0;
-double PathFollower::curAngle = 0;
-
+double PathFollower::cruiseSpeed = 0.3;
+double PathFollower::endSpeed = 0;
+void (*PathFollower::endCallback)(void) = nullptr;
 std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
 
 void PathFollower::setCurrentPosition(double x, double y) {
     curPosX = x;
     curPosY = y;
-    curAngle = getRobotHeading();
 }
 void PathFollower::setCurrentX(double value) {
     curPosX = value;
@@ -19,13 +21,24 @@ void PathFollower::setCurrentX(double value) {
 void PathFollower::setCurrentY(double value) {
     curPosY = value;
 }
+void PathFollower::setCruiseSpeed(double speed) {
+    cruiseSpeed = speed;
+}
+void PathFollower::setEndSpeed(double speed) {
+    endSpeed = speed;
+}
+void PathFollower::setEndCallback(void (*callback)(void)) {
+    endCallback = callback;
+}
 
 void PathFollower::setCurrentPositionDirection(double x, double y, double dirX, double dirY)
 {
     curPosX = x;
     curPosY = y;
 
-    //double dst = sqrt(dirX*dirX+dirY*dirY); heure de retenue !
+    /**** LE BORDEL ! ****
+
+    double dst = sqrt(dirX*dirX+dirY*dirY);
     double acos1 = acos(dirX/dst);
     double asin1 = asin(dirY/dst);
 
@@ -38,11 +51,10 @@ void PathFollower::setCurrentPositionDirection(double x, double y, double dirX, 
         if(asin1>=0)
             curAngle = acos1*180.f/M_PI;
         else
-            curAngle = -acos1*180.f/M_PI;
+            curAngle = -acos1*180.f/M_PI;*/
 }
 
 void PathFollower::followPath(const struct robotPoint* points, const int length) {
-    // TODO might have to change that
     std::vector<double> pointsToVisit;
 
     for(int i=0; i<length; i++) {
@@ -56,8 +68,14 @@ void PathFollower::followPath(const std::vector<double>& path)
 {
     setRobotDistance(0);
 
-    if(path.size()<2)
+    if(path.size()<2) {
+        std::cout<<"WARNING : the path is empty, ignoring ..."<<endl;
         return;
+    }
+
+    // make sure everything is clean
+    angles.clear();
+    distances.clear();
 
     std::pair<double,double> angleDistance = getAngleDistance(curPosX,curPosY,path[0],path[1]);
     angles.push_back(angleDistance.first);
@@ -73,9 +91,8 @@ void PathFollower::followPath(const std::vector<double>& path)
     }
 
     setTargetHeading(angles.front(), &PathFollower::standardCallback);
-    std::cout<<"turning of "<<angles.front()<<std::endl;
+    //std::cout<<"turning of "<<angles.front()<<std::endl;
     angles.pop_front();
-    curAngle = 0; //after beeing set, the currrent angle is in getRobotHeading
 }
 
 std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, double x2, double y2)
@@ -103,7 +120,7 @@ std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, do
 
     std::cout<<x1<<" "<<y1<<" "<<x2<<" " <<y2<<" => "<<ret.second<<" avec  "<<acos1<<" "<<asin1<<" giving "<<angle1<<std::endl;
 
-    ret.first = angle1-curAngle;
+    ret.first = angle1;
 
 	return ret;
 }
@@ -111,22 +128,25 @@ std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, do
 void PathFollower::standardCallback()
 {
 	setRobotDistance(0);
-    if(distances.size())
-    {
-        std::cout<<"going of "<<distances.front()<<std::endl;
-        // TODO would be good to be able to tune that
-        queueSpeedChange(0.3, nullptr);
-        queueStopAt(distances.front(), &PathFollower::rotateCallback);
+    if(distances.size()) {
+        // std::cout<<"going of "<<distances.front()<<std::endl;
+        queueSpeedChange(cruiseSpeed, nullptr);
+        if(distances.size() == 1 && endSpeed != 0)
+            queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
+        else
+            queueStopAt(distances.front(), &PathFollower::rotateCallback);
         distances.pop_front();
     }
 }
 
 void PathFollower::rotateCallback(struct motionElement* element)
 {
-    if(angles.size())
-    {
-        std::cout<<"turning of "<<angles.front()<<std::endl;
+    if(angles.size()) {
+        //std::cout<<"turning of "<<angles.front()<<std::endl;
         setTargetHeading(angles.front(), &PathFollower::standardCallback);
         angles.pop_front();
+    } else { // on the end of the path
+        if(endCallback != nullptr)
+            endCallback();
     }
 }

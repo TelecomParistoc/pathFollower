@@ -7,11 +7,7 @@
 #include <vector>
 #include <cmath>
 #include <list>
-
-#include "robotdriver/headingcontroller.h"
-#include "robotdriver/motioncontroller.h"
-#include "robotdriver/speedcontroller.h"
-#include "robotdriver/motordriver.h"
+#include <robotdriver/speedcontroller.h>
 #include "pathfollower.h"
 
 #ifndef M_PI
@@ -23,21 +19,32 @@ class PathFollower
 {
     public:
         static void setCurrentPosition(double x, double y);
+        // deprecated for now
         static void setCurrentPositionDirection(double x, double y, double dirX, double dirY);
+        // set only one coordinate (useful when recalibrating)
         static void setCurrentX(double value);
         static void setCurrentY(double value);
-        
+        // set the speed to robot will travel at along the path
+        static void setCruiseSpeed(double speed);
+        // set the robot speed at the end of the path (useful to avoid wasting time when starting actions)
+        static void setEndSpeed(double speed);
+        // C friendly
         static void followPath(const struct robotPoint* points, const int length);
+        // not C friendly. Baaaad
         static void followPath(const std::vector<double>& path);
 
         static std::pair<double,double> getAngleDistance(double x1, double y1, double x2, double y2);
 
+        // when finishing a turn
         static void standardCallback();
+        // when finishing a translation
         static void rotateCallback(struct motionElement* element);
 
     private:
         static double curPosX, curPosY;
-        static double curAngle;
+        static double cruiseSpeed, endSpeed;
+
+        static void (*PathFollower::endCallback)(void);
 
         static std::list<double> angles, distances;
 };
