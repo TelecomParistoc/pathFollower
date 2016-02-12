@@ -28,6 +28,7 @@ class PathFollower
         static void setCruiseSpeed(double speed);
         // set the robot speed at the end of the path (useful to avoid wasting time when starting actions)
         static void setEndSpeed(double speed);
+	static void setEndCallback(void (*callback)(void));
         // C friendly
         static void followPath(const struct robotPoint* points, const int length);
         // not C friendly. Baaaad
@@ -44,7 +45,7 @@ class PathFollower
         static double curPosX, curPosY;
         static double cruiseSpeed, endSpeed;
 
-        static void (*PathFollower::endCallback)(void);
+        static void (*endCallback)(void);
 
         static std::list<double> angles, distances;
 };
