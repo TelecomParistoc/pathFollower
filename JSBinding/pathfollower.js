@@ -1,12 +1,18 @@
 var ffi = require('ffi');
+var Struct = require('ref-struct');
 var simpleCallback = ffi.Function('void', []);
+var robotPoint = Struct({
+  'x': 'double',
+  'y': 'double'
+});
+var robotPointPtr = ref.refType(robotPoint);
 
-var lib = ffi.Library('./../build/librobotdriver', {
+var lib = ffi.Library('libpathfollower', {
     'setCurrentLocation': [ 'void', ['double', 'double'] ],
     'setCurrentX': [ 'void', ['double'] ],
     'setCurrentY': [ 'void', ['double'] ],
     'setCruiseSpeed': [ 'void', ['double'] ],
-    'followPath': ['void', ['struct robotPoint *', 'int', 'double', simpleCallback]],
+    'followPath': ['void', [robotPointPtr, 'int', 'double', simpleCallback]],
 });
 var endCallback;
 
@@ -17,8 +23,11 @@ module.exports = {
     cruiseSpeed: lib.setCruiseSpeed,
     followPath: function (path, endSpeed, callback) {
         endCallback = callback;
-        // TODO: some magic here
+        var points = [];
+        for(var i in path) {
+            points.push(new robotPoint({x: path[i].x, y: path[i].y,}));
+        }
         var cbck = ffi.Callback('void', [], endCallback);
-        lib.followPath(path, path.length, endSpeed, cbck);
+        lib.followPath(points, path.length, endSpeed, cbck);
     }
 };
