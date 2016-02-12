@@ -3,6 +3,7 @@
  * developped by J. "JS" Schoumacher and A. Bonetti for Telecom Robotics */
 
 #include <pathfollower/pathfollower.h>
+#include <robotdriver/speedcontroller.h>
 #include <robotdriver/motioncontroller.h>
 #include <stdio.h>
 
@@ -14,17 +15,15 @@ void onTheEndOfTheRoad() {
 int main() {
     // the path the robot has to follow ({x, y} in mm)
     struct robotPoint path[] = {
-        {700, 70},
-        {1200, 900},
-        {200, 200},
-        {900, 1850}
+        {480, 180},
+        {180, 1160}
     };
 
     initMotionController();
     setRobotDistance(0);
 
-    setCurrentLocation(200,900);
-    followPath(path, 4, 0, onTheEndOfTheRoad);
+    setCurrentLocation(180,1160);
+    followPath(path, 2, 0, onTheEndOfTheRoad);
 
     while(1);
 

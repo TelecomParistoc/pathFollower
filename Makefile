@@ -1,6 +1,6 @@
 OBJ_DIR = obj
 SRC = pathFollower.cpp pathfollower.c
-OBJ = pathFollower.o pathfollower.o
+OBJ = $(OBJ_DIR)/pathFollower.o $(OBJ_DIR)/pathfollower.o
 
 PREFIX = /usr/local
 TARGET = libpathfollower.so

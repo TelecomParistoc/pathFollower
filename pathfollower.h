@@ -18,8 +18,8 @@ extern "C" {
 /* a point on the game table, with coordinates in mm (can be positive and negative)
  * the user is free to place to origin as it doesn't affect this lib at all */
 struct robotPoint {
-    double x,
-    double y
+    double x;
+    double y;
 };
 
 /* set the current robot absolute location. By default, the robot starts at (0,0)

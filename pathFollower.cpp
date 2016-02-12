@@ -1,6 +1,6 @@
 #include "pathFollower.hpp"
 #include <robotdriver/motordriver.h>
-#include <robotdriver/headingcontroller.>
+#include <robotdriver/headingcontroller.h>
 #include <robotdriver/motioncontroller.h>
 
 double PathFollower::curPosX = 0;
@@ -31,16 +31,17 @@ void PathFollower::setEndCallback(void (*callback)(void)) {
     endCallback = callback;
 }
 
-void PathFollower::setCurrentPositionDirection(double x, double y, double dirX, double dirY)
+/*void PathFollower::setCurrentPositionDirection(double x, double y, double dirX, double dirY)
 {
     curPosX = x;
     curPosY = y;
 
-    /**** LE BORDEL ! ****
+    //LE BORDEL
 
     double dst = sqrt(dirX*dirX+dirY*dirY);
     double acos1 = acos(dirX/dst);
     double asin1 = asin(dirY/dst);
+    double curAngle = 0;
 
     if(fabs(fabs(acos1)-fabs(asin1))<=0.000000001)
         if(asin1>=0)
@@ -51,8 +52,8 @@ void PathFollower::setCurrentPositionDirection(double x, double y, double dirX, 
         if(asin1>=0)
             curAngle = acos1*180.f/M_PI;
         else
-            curAngle = -acos1*180.f/M_PI;*/
-}
+            curAngle = -acos1*180.f/M_PI;
+}*/
 
 void PathFollower::followPath(const struct robotPoint* points, const int length) {
     std::vector<double> pointsToVisit;
@@ -69,7 +70,7 @@ void PathFollower::followPath(const std::vector<double>& path)
     setRobotDistance(0);
 
     if(path.size()<2) {
-        std::cout<<"WARNING : the path is empty, ignoring ..."<<endl;
+        std::cout<<"WARNING : the path is empty, ignoring ..."<<std::endl;
         return;
     }
 
@@ -149,4 +150,6 @@ void PathFollower::rotateCallback(struct motionElement* element)
         if(endCallback != nullptr)
             endCallback();
     }
+    //a supprimer
+    element++;
 }

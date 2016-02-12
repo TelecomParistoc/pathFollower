@@ -1,8 +1,6 @@
 #include "pathfollower.h"
 #include "pathFollower.hpp"
 
-static void (*callback)(void) = NULL;
-
 void setCurrentLocation(double x, double y) {
     PathFollower::setCurrentPosition(x, y);
 }
