@@ -1,6 +1,7 @@
 #include "pathFollower.hpp"
 #include <robotdriver/motordriver.h>
 #include <robotdriver/headingcontroller.h>
+#include <robotdriver/speedcontroller.h>
 #include <robotdriver/motioncontroller.h>
 
 double PathFollower::curPosX = 0;
@@ -67,8 +68,6 @@ void PathFollower::followPath(const struct robotPoint* points, const int length)
 
 void PathFollower::followPath(const std::vector<double>& path)
 {
-    setRobotDistance(0);
-
     if(path.size()<2) {
         std::cout<<"WARNING : the path is empty, ignoring ..."<<std::endl;
         return;
