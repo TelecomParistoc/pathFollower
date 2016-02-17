@@ -19,8 +19,6 @@ class PathFollower
 {
     public:
         static void setCurrentPosition(double x, double y);
-        // deprecated for now
-        static void setCurrentPositionDirection(double x, double y, double dirX, double dirY);
         // set only one coordinate (useful when recalibrating)
         static void setCurrentX(double value);
         static void setCurrentY(double value);

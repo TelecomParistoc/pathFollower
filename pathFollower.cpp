@@ -31,30 +31,6 @@ void PathFollower::setEndCallback(void (*callback)(void)) {
     endCallback = callback;
 }
 
-/*void PathFollower::setCurrentPositionDirection(double x, double y, double dirX, double dirY)
-{
-    curPosX = x;
-    curPosY = y;
-
-    //LE BORDEL
-
-    double dst = sqrt(dirX*dirX+dirY*dirY);
-    double acos1 = acos(dirX/dst);
-    double asin1 = asin(dirY/dst);
-    double curAngle = 0;
-
-    if(fabs(fabs(acos1)-fabs(asin1))<=0.000000001)
-        if(asin1>=0)
-            curAngle = acos1*180.f/M_PI;
-        else
-            curAngle = asin1*180.f/M_PI;
-    else
-        if(asin1>=0)
-            curAngle = acos1*180.f/M_PI;
-        else
-            curAngle = -acos1*180.f/M_PI;
-}*/
-
 void PathFollower::followPath(const struct robotPoint* points, const int length) {
     std::vector<double> pointsToVisit;
 
