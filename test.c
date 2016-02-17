@@ -5,22 +5,29 @@
 #include <pathfollower/pathfollower.h>
 #include <robotdriver/speedcontroller.h>
 #include <robotdriver/motioncontroller.h>
+#include <robotdriver/motordriver.h>
 #include <stdio.h>
 
 // called when the robot has reached the end of the path
 void onTheEndOfTheRoad() {
+    struct robotPoint path[] = {
+        {480, 180},
+        {180, 1160}
+    };
     printf("I've travelled a long way, and now I reached the end of my path.\n");
+    //followPath(path, 2, 0, NULL);
 }
 
 int main() {
     // the path the robot has to follow ({x, y} in mm)
     struct robotPoint path[] = {
         {480, 180},
-        {180, 1160}
+        {330, 670}
     };
 
     initMotionController();
     setRobotDistance(0);
+    setRobotHeading(0);
 
     setCurrentLocation(180,1160);
     followPath(path, 2, 0, onTheEndOfTheRoad);
