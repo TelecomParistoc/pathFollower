@@ -8,6 +8,7 @@ double PathFollower::curPosX = 0;
 double PathFollower::curPosY = 0;
 double PathFollower::cruiseSpeed = 0.3;
 double PathFollower::endSpeed = 0;
+bool PathFollower::negativeSpeed = false;
 void (*PathFollower::endCallback)(void) = nullptr;
 std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
@@ -66,9 +67,15 @@ void PathFollower::followPath(const std::vector<double>& path)
         curPosY = path[i+1];
     }
 
-    setTargetHeading(angles.front(), &PathFollower::standardCallback);
-    //std::cout<<"turning of "<<angles.front()<<std::endl;
+    if(fabs(angles.front()-getCurrentHeading())<=90.0)
+        setTargetHeading(angles.front(), &PathFollower::standardCallback);
+    else
+    {
+        negativeSpeed = !negativeSpeed;
+        setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
+    }
     angles.pop_front();
+    //std::cout<<"turning of "<<angles.front()<<std::endl;
 }
 
 std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, double x2, double y2)
@@ -106,7 +113,10 @@ void PathFollower::standardCallback()
 	setRobotDistance(0);
     if(distances.size()) {
         // std::cout<<"going of "<<distances.front()<<std::endl;
-        queueSpeedChange(cruiseSpeed, nullptr);
+        if(negativeSpeed)
+            queueSpeedChange(-cruiseSpeed, nullptr);
+        else
+            queueSpeedChange(cruiseSpeed, nullptr);
         if(distances.size() == 1 && endSpeed != 0)
             queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
         else
@@ -119,7 +129,13 @@ void PathFollower::rotateCallback(struct motionElement* element)
 {
     if(angles.size()) {
         //std::cout<<"turning of "<<angles.front()<<std::endl;
-        setTargetHeading(angles.front(), &PathFollower::standardCallback);
+        if(fabs(angles.front()-getCurrentHeading())<=90.0)
+            setTargetHeading(angles.front(), &PathFollower::standardCallback);
+        else
+        {
+            negativeSpeed = !negativeSpeed;
+            setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
+        }
         angles.pop_front();
     } else { // on the end of the path
         if(endCallback != nullptr)
