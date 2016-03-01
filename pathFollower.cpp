@@ -58,8 +58,7 @@ void PathFollower::followPath(const std::vector<double>& path)
     angles.push_back(angleDistance.first);
     distances.push_back(angleDistance.second);
 
-    for(unsigned int i=2;i<path.size();i+=2)
-    {
+    for(unsigned int i=2;i<path.size();i+=2) {
         std::pair<double,double> angleDistance = getAngleDistance(path[i-2],path[i-1],path[i],path[i+1]);
         angles.push_back(angleDistance.first);
         distances.push_back(angleDistance.second);
@@ -67,10 +66,9 @@ void PathFollower::followPath(const std::vector<double>& path)
         curPosY = path[i+1];
     }
 
-    if(fabs(angles.front()-getCurrentHeading())<=90.0)
+    if(fabs(angles.front()-getRobotHeading()) <= 90.0)
         setTargetHeading(angles.front(), &PathFollower::standardCallback);
-    else
-    {
+    else {
         negativeSpeed = !negativeSpeed;
         setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
     }
@@ -131,8 +129,7 @@ void PathFollower::rotateCallback(struct motionElement* element)
         //std::cout<<"turning of "<<angles.front()<<std::endl;
         if(fabs(angles.front()-getCurrentHeading())<=90.0)
             setTargetHeading(angles.front(), &PathFollower::standardCallback);
-        else
-        {
+        else {
             negativeSpeed = !negativeSpeed;
             setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
         }
@@ -141,6 +138,5 @@ void PathFollower::rotateCallback(struct motionElement* element)
         if(endCallback != nullptr)
             endCallback();
     }
-    //a supprimer
     element++;
 }
