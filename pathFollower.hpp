@@ -42,6 +42,7 @@ class PathFollower
         static void rotateCallback(struct motionElement* element);
 
     private:
+	static bool negativeSpeed;
         static double curPosX, curPosY;
         static double cruiseSpeed, endSpeed;
 
