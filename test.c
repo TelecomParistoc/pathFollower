@@ -21,15 +21,20 @@ void onTheEndOfTheRoad() {
 int main() {
     // the path the robot has to follow ({x, y} in mm)
     struct robotPoint path[] = {
-        {480, 180},
-        {330, 670}
+        {330, 280},
+        {360, 250},
+        {390, 240},
+        {430, 230},
+        {480, 220},
+        {480, 210},
+        {490, 210}
     };
 
     initMotionController();
     setRobotDistance(0);
     setRobotHeading(0);
 
-    setCurrentLocation(180,1160);
+    setCurrentLocation(300,1110);
     followPath(path, 2, 0, onTheEndOfTheRoad);
 
     while(1);
