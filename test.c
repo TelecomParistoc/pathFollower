@@ -32,7 +32,7 @@ int main() {
     };*/
 
     struct robotPoint path[] = {
-        {800, 100},
+        {700, 100},
         {500, 100}
     };
 
