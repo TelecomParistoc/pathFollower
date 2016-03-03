@@ -8,6 +8,7 @@
 #include <robotdriver/motordriver.h>
 #include <stdio.h>
 
+/*
 // called when the robot has reached the end of the path
 void onTheEndOfTheRoad() {
     struct robotPoint path[] = {
@@ -16,11 +17,11 @@ void onTheEndOfTheRoad() {
     };
     printf("I've travelled a long way, and now I reached the end of my path.\n");
     //followPath(path, 2, 0, NULL);
-}
+}*/
 
 int main() {
     // the path the robot has to follow ({x, y} in mm)
-    struct robotPoint path[] = {
+    /*struct robotPoint path[] = {
         {330, 280},
         {360, 250},
         {390, 240},
@@ -28,14 +29,20 @@ int main() {
         {480, 220},
         {480, 210},
         {490, 210}
+    };*/
+
+    struct robotPoint path[] = {
+        {600, 100},
+        {500, 100}
     };
 
     initMotionController();
     setRobotDistance(0);
     setRobotHeading(0);
 
-    setCurrentLocation(300,1110);
-    followPath(path, 2, 0, onTheEndOfTheRoad);
+    //setCurrentLocation(300,1110);
+    setCurrentLocation(500,100);
+    followPath(path, 2, 0, NULL);
 
     while(1);
 
