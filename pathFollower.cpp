@@ -111,7 +111,7 @@ void PathFollower::standardCallback()
 {
 	setRobotDistance(0);
     if(distances.size()) {
-        // std::cout<<"going of "<<distances.front()<<std::endl;
+        std::cout<<"going of "<<distances.front()<<" "<<negativeSpeed<<" "<<cruiseSpeed<<std::endl;
         if(negativeSpeed)
             queueSpeedChange(-cruiseSpeed, nullptr);
         else
