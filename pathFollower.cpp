@@ -110,16 +110,25 @@ std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, do
 void PathFollower::standardCallback()
 {
 	setRobotDistance(0);
-    if(distances.size()) {
+    if(distances.size())
+    {
         std::cout<<"going of "<<distances.front()<<" "<<negativeSpeed<<" "<<cruiseSpeed<<std::endl;
         if(negativeSpeed)
+        {
             queueSpeedChange(-cruiseSpeed, nullptr);
+            if(distances.size() == 1 && endSpeed != 0)
+                queueSpeedChangeAt(-distances.front(), endSpeed, &PathFollower::rotateCallback);
+            else
+                queueStopAt(-distances.front(), &PathFollower::rotateCallback);
+        }
         else
+        {
             queueSpeedChange(cruiseSpeed, nullptr);
-        if(distances.size() == 1 && endSpeed != 0)
-            queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
-        else
-            queueStopAt(distances.front(), &PathFollower::rotateCallback);
+            if(distances.size() == 1 && endSpeed != 0)
+                queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
+            else
+                queueStopAt(distances.front(), &PathFollower::rotateCallback);
+        }
         distances.pop_front();
     }
 }
