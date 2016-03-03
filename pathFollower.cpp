@@ -109,10 +109,10 @@ std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, do
 
 void PathFollower::standardCallback()
 {
-	setRobotDistance(0);
+	  setRobotDistance(0);
     if(distances.size())
     {
-        std::cout<<"going of "<<distances.front()<<" "<<negativeSpeed<<" "<<cruiseSpeed<<std::endl;
+        //std::cout<<"going of "<<distances.front()<<" "<<negativeSpeed<<" "<<cruiseSpeed<<std::endl;
         if(negativeSpeed)
         {
             queueSpeedChange(-cruiseSpeed, nullptr);
@@ -136,25 +136,23 @@ void PathFollower::standardCallback()
 void PathFollower::rotateCallback(struct motionElement* element)
 {
     if(angles.size()) {
-        std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
+        //std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
         float angle = getRobotHeading();
         if(negativeSpeed)
             angle = 180.f-angle;
         if(fabs(angles.front()-angle)<=90.0)
-        {
-            std::cout<<"Angle doesn't change"<<std::endl;
             setTargetHeading(angles.front(), &PathFollower::standardCallback);
-        }
-        else {
+        else
+        {
             negativeSpeed = !negativeSpeed;
-            std::cout<<"Angle change "<<fmod(180.0+angles.front(),360.0)<<std::endl;
             if(negativeSpeed)
                 setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
             else
                 setTargetHeading(angles.front(), &PathFollower::standardCallback);
         }
         angles.pop_front();
-    } else { // on the end of the path
+    } else
+    { // on the end of the path
         if(endCallback != nullptr)
             endCallback();
     }
