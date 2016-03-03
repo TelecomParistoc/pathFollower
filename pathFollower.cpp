@@ -148,7 +148,10 @@ void PathFollower::rotateCallback(struct motionElement* element)
         else {
             negativeSpeed = !negativeSpeed;
             std::cout<<"Angle change "<<fmod(180.0+angles.front(),360.0)<<std::endl;
-            setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
+            if(negativeSpeed)
+                setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
+            else
+                setTargetHeading(angles.front(), &PathFollower::standardCallback);
         }
         angles.pop_front();
     } else { // on the end of the path
