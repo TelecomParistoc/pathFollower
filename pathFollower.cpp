@@ -137,7 +137,10 @@ void PathFollower::rotateCallback(struct motionElement* element)
 {
     if(angles.size()) {
         std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
-        if(fabs(angles.front()-getRobotHeading())<=90.0)
+        float angle = getRobotHeading();
+        if(negativeSpeed)
+            angle = 180.f-angle;
+        if(fabs(angles.front()-angle)<=90.0)
         {
             std::cout<<"Angle doesn't change"<<std::endl;
             setTargetHeading(angles.front(), &PathFollower::standardCallback);
