@@ -136,11 +136,15 @@ void PathFollower::standardCallback()
 void PathFollower::rotateCallback(struct motionElement* element)
 {
     if(angles.size()) {
-        //std::cout<<"turning of "<<angles.front()<<std::endl;
+        std::cout<<"turning of "<<angles.front()<<std::endl;
         if(fabs(angles.front()-getRobotHeading())<=90.0)
+        {
+            std::cout<<"Angle doesn't change"<<std::endl;
             setTargetHeading(angles.front(), &PathFollower::standardCallback);
+        }
         else {
             negativeSpeed = !negativeSpeed;
+            std::cout<<"Angle change "<<fmod(180.0+angles.front(),360.0)<<std::endl;
             setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
         }
         angles.pop_front();
