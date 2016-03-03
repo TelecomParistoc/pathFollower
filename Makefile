@@ -46,6 +46,7 @@ install: $(EXEC)
 	mkdir -p $(DESTDIR)$(PREFIX)/include/pathfollower/
 	cp $(EXEC) $(DESTDIR)$(PREFIX)/lib/
 	cp pathfollower.h $(DESTDIR)$(PREFIX)/include/pathfollower/
+	cp pathFollower.hpp $(DESTDIR)$(PREFIX)/include/pathfollower/
 	chmod 0755 $(DESTDIR)$(PREFIX)/lib/$(TARGET)
 	ldconfig
 	ldconfig -p | grep pathfollower
