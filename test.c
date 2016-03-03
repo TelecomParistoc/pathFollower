@@ -33,7 +33,9 @@ int main() {
 
     struct robotPoint path[] = {
         {700, 100},
-        {500, 100}
+        {500, 100},
+        {800, 100},
+        {300, 100}
     };
 
     initMotionController();
