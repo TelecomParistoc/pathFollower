@@ -44,7 +44,7 @@ int main() {
 
     //setCurrentLocation(300,1110);
     setCurrentLocation(500,100);
-    followPath(path, 2, 0, NULL);
+    followPath(path, 4, 0, NULL);
 
     while(1);
 
