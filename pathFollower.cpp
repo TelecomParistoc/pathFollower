@@ -45,7 +45,8 @@ void PathFollower::followPath(const struct robotPoint* points, const int length)
 
 void PathFollower::followPath(const std::vector<double>& path)
 {
-    if(path.size()<2) {
+    if(path.size()<2)
+    {
         std::cout<<"WARNING : the path is empty, ignoring ..."<<std::endl;
         return;
     }
@@ -75,6 +76,13 @@ void PathFollower::followPath(const std::vector<double>& path)
     }
     angles.pop_front();
     //std::cout<<"turning of "<<angles.front()<<std::endl;
+}
+
+void PathFollower::followPath(const std::vector<double>& points, void (*endCallback)(void), double endSpeed)
+{
+    followPath(points);
+    setEndSpeed(endSpeed);
+    setEndCallback(endCallback);
 }
 
 std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, double x2, double y2)

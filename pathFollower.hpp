@@ -33,6 +33,7 @@ class PathFollower
         static void followPath(const struct robotPoint* points, const int length);
         // not C friendly. Baaaad
         static void followPath(const std::vector<double>& path);
+	    static void followPath(const std::vector<double>& points, void (*endCallback)(void), double endSpeed = 0);
 
         static std::pair<double,double> getAngleDistance(double x1, double y1, double x2, double y2);
 
