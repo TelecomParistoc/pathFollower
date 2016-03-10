@@ -78,7 +78,7 @@ void PathFollower::followPath(const std::vector<double>& path)
     //std::cout<<"turning of "<<angles.front()<<std::endl;
 }
 
-void PathFollower::followPath(const std::vector<double>& points, void (*endCallback)(void), double endSpeed)
+void PathFollower::followPathCallback(const std::vector<double>& points, void (*endCallback)(void), double endSpeed)
 {
     followPath(points);
     setEndSpeed(endSpeed);
