@@ -73,10 +73,12 @@ void PathFollower::followPath(const std::vector<double>& path)
         curPosY = path[i+1];
     }
 
+    std::cout<<"Negative speed ? "<<negativeSpeed<<std::endl;
     if(fabs(angles.front()-getRobotHeading()) <= 90.0)
         setTargetHeading(angles.front(), &PathFollower::standardCallback);
     else
     {
+        std::cout<<"Inverse speed => "<<!negativeSpeed<<std::endl;
         negativeSpeed = !negativeSpeed;
         setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
     }
@@ -156,12 +158,14 @@ void PathFollower::rotateCallback(struct motionElement* element)
     if(angles.size()) {
         //std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
         float angle = getRobotHeading();
+        std::cout<<"Negative speed ? "<<negativeSpeed<<std::endl;
         if(negativeSpeed)
             angle = 180.f-angle;
         if(fabs(angles.front()-angle)<=90.0)
             setTargetHeading(angles.front(), &PathFollower::standardCallback);
         else
         {
+            std::cout<<"We inverse speed !"<<!negativeSpeed<<std::endl;
             negativeSpeed = !negativeSpeed;
             if(negativeSpeed)
                 setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
