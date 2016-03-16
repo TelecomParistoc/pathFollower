@@ -56,13 +56,19 @@ void PathFollower::followPath(const std::vector<double>& path)
     distances.clear();
 
     std::pair<double,double> angleDistance = getAngleDistance(curPosX,curPosY,path[0],path[1]);
-    angles.push_back(angleDistance.first);
-    distances.push_back(angleDistance.second);
+    if(angleDistance.second>0.1)
+    {
+        angles.push_back(angleDistance.first);
+        distances.push_back(angleDistance.second);
+    }
 
     for(unsigned int i=2;i<path.size();i+=2) {
         std::pair<double,double> angleDistance = getAngleDistance(path[i-2],path[i-1],path[i],path[i+1]);
-        angles.push_back(angleDistance.first);
-        distances.push_back(angleDistance.second);
+        if(angleDistance.second>0.1)
+        {
+            angles.push_back(angleDistance.first);
+            distances.push_back(angleDistance.second);
+        }
         curPosX = path[i];
         curPosY = path[i+1];
     }
@@ -89,7 +95,11 @@ std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, do
 {
     std::pair<double,double> ret;
 
+    ret.first = 0;
     ret.second = sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1));
+
+    if(ret.second<0.0000001)
+        return ret;
 
     //python -c 'import math;x1=200;y1=900;x2=700;y2=50;d=math.sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1));print(math.acos((x2-x1)/d));print(math.asin((y2-y1)/d))'
     double acos1 = acos((x2-x1)/ret.second);
