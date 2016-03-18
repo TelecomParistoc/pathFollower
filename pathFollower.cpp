@@ -74,7 +74,7 @@ void PathFollower::followPath(const std::vector<double>& path)
     }
 
     std::cout<<"Negative speed ? "<<negativeSpeed<<std::endl;
-    if(fabs(angles.front()-getRobotHeading()) <= 90.0)
+    if(fmod(fabs(angles.front()-angle),180.0) <= 90.0)
         setTargetHeading(angles.front(), &PathFollower::standardCallback);
     else
     {
@@ -161,7 +161,7 @@ void PathFollower::rotateCallback(struct motionElement* element)
         std::cout<<"Negative speed ? "<<negativeSpeed<<" "<<angle<<" and dest_angle "<<angles.front()<<std::endl;
         if(negativeSpeed)
             angle = 180.f-angle;
-        if(fabs(angles.front()-angle)<=90.0)
+        if(fmod(fabs(angles.front()-angle),180.0) <= 90.0)
             setTargetHeading(angles.front(), &PathFollower::standardCallback);
         else
         {
