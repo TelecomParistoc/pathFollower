@@ -129,7 +129,7 @@ std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, do
 
 void PathFollower::standardCallback()
 {
-	  setRobotDistance(0);
+	setRobotDistance(0);
     if(distances.size())
     {
         //std::cout<<"going of "<<distances.front()<<" "<<negativeSpeed<<" "<<cruiseSpeed<<std::endl;
@@ -158,7 +158,7 @@ void PathFollower::rotateCallback(struct motionElement* element)
     if(angles.size()) {
         //std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
         float angle = getRobotHeading();
-        std::cout<<"Negative speed ? "<<negativeSpeed<<std::endl;
+        std::cout<<"Negative speed ? "<<negativeSpeed<<" "<<angle<<" and dest_angle "<<angles.first()<<std::endl;
         if(negativeSpeed)
             angle = 180.f-angle;
         if(fabs(angles.front()-angle)<=90.0)
