@@ -72,7 +72,7 @@ void PathFollower::followPath(const std::vector<double>& path)
         setTargetHeading(angles.front(), &PathFollower::standardCallback);
     else
     {
-        std::cout<<"Inverse speed => "<<!negativeSpeed<<std::endl;
+        std::cout<<"Inverse speed => "<<!negativeSpeed<<" "<<fmod(180.0+angles.front(),360.0)<<std::endl;
         negativeSpeed = !negativeSpeed;
         setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
     }
