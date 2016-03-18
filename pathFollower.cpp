@@ -73,8 +73,12 @@ void PathFollower::followPath(const std::vector<double>& path)
         curPosY = path[i+1];
     }
 
+    float angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
+    if(angle>=180.0)
+        angle -= 360.0;
+
     std::cout<<"Negative speed ? "<<negativeSpeed<<std::endl;
-    if(fmod(fabs(angles.front()-getRobotHeading()),180.0) <= 90.0)
+    if(fabs(angles.front()-angle) <= 90.0)
         setTargetHeading(angles.front(), &PathFollower::standardCallback);
     else
     {
@@ -157,11 +161,13 @@ void PathFollower::rotateCallback(struct motionElement* element)
 {
     if(angles.size()) {
         //std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
-        float angle = getRobotHeading();
+        float angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
+        if(angle>=180.0)
+            angle -= 360.0;
         std::cout<<"Negative speed ? "<<negativeSpeed<<" "<<angle<<" and dest_angle "<<angles.front()<<std::endl;
         if(negativeSpeed)
             angle = 180.f-angle;
-        if(fmod(fabs(angles.front()-angle),180.0) <= 90.0)
+        if(fabs(angles.front()-angle) <= 90.0)
             setTargetHeading(angles.front(), &PathFollower::standardCallback);
         else
         {
