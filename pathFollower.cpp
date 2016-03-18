@@ -74,7 +74,7 @@ void PathFollower::followPath(const std::vector<double>& path)
     }
 
     std::cout<<"Negative speed ? "<<negativeSpeed<<std::endl;
-    if(fmod(fabs(angles.front()-angle),180.0) <= 90.0)
+    if(fmod(fabs(angles.front()-getRobotHeading()),180.0) <= 90.0)
         setTargetHeading(angles.front(), &PathFollower::standardCallback);
     else
     {
