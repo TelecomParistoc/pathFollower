@@ -24,12 +24,11 @@ void onTheEndOfTheRoad() {
 int main()
 {
     struct robotPoint path[] = {
-        {700, 100},
+        {800, 100},
         {500, 100},
         {800, 100},
         {500, 100}
     };
-
     initMotionController();
     setRobotDistance(0);
     setRobotHeading(0);
