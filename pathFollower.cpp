@@ -88,16 +88,37 @@ void PathFollower::followPath(const std::vector<double>& path)
     {
         angles.push_back(angleDistance.first);
         distances.push_back(angleDistance.second);
-        recalibrate.push_back(isOutsideLand(path[0],path[1]));
+        if(isOutsideLand(path[0],path[1]))
+        {
+            auto projected = projectInLand(path[0],path[1]);
+            angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
+            angles.push_back(angleDistance.first);
+            distances.push_back(angleDistance.second);
+            recalibrate.push_back(true);
+            //positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
+        }
+        else
+            recalibrate.push_back(false);
     }
 
-    for(unsigned int i=2;i<path.size();i+=2) {
+    for(unsigned int i=2;i<path.size();i+=2)
+    {
         std::pair<double,double> angleDistance = getAngleDistance(path[i-2],path[i-1],path[i],path[i+1]);
         if(angleDistance.second>0.1)
         {
             angles.push_back(angleDistance.first);
             distances.push_back(angleDistance.second);
-            recalibrate.push_back(isOutsideLand(path[i],path[i+1]));
+            if(isOutsideLand(path[i],path[i+1]))
+            {
+                auto projected = projectInLand(path[0],path[1]);
+                angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
+                angles.push_back(angleDistance.first);
+                distances.push_back(angleDistance.second);
+                recalibrate.push_back(true);
+                //positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
+            }
+            else
+                recalibrate.push_back(false);
         }
         curPosX = path[i];
         curPosY = path[i+1];
@@ -164,8 +185,6 @@ std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, do
 void PathFollower::standardCallback()
 {
 	setRobotDistance(0);
-    /*prevPosition.first = currentPosition.first;
-    prevPosition.second = currentPosition.second;*/
     std::cout<<"Reseting distance"<<std::endl;
     if(distances.size())
     {
@@ -186,6 +205,9 @@ void PathFollower::standardCallback()
             else
                 queueStopAt(distances.front(), &PathFollower::rotateCallback);
         }
+        /*if(recalibrate.front())
+            setRecalibrationCallback(PathFollower::whenBlockedRecalibration);*/
+        recalibrate.pop_front();
         distances.pop_front();
     }
 }
@@ -225,6 +247,18 @@ bool PathFollower::isOutsideLand(int x, int y)
     return x<0||y<0||x>3000||y>2000;
 }
 
+std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::projectInLand(int x, int y)
+{
+    std::pair<std::pair<double,double>,std::pair<double,double> > res;
+    res.first.first = x;
+    res.first.second = y;
+    return res;
+    /*if(x<0)
+    {
+        res.first.first =
+    }*/
+}
+
 void PathFollower::resetPosition(const std::pair<double,double>& v)
 {
     currentPosition = v;
@@ -244,9 +278,14 @@ std::pair<double,double> PathFollower::getCurrentPos()
 std::pair<double,double> PathFollower::getCurrentDirection()
 {return currentDirection;}
 
+void PathFollower::whenBlockedRecalibration()
+{
+
+}
+
 void PathFollower::updateAngleStartingMove()
 {
-    std::cout<<"Position starting"<<std::endl;
+    std::cout<<"Position starting "<<getRobotHeading()<<" "<<getDistanceSinceMoveStart()<<std::endl;
     currentAngle = getRobotHeading();
     currentDirection.first = cos(currentAngle/180.0*M_PI);
     currentDirection.second = sin(currentAngle/180.0*M_PI);

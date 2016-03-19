@@ -50,11 +50,13 @@ class PathFollower
         static void rotateCallback(struct motionElement* element);
 
         static bool isOutsideLand(int x, int y);
+        static std::pair<std::pair<double,double>,std::pair<double,double> > projectInLand(int x, int y);
 
         static void resetPosition(const std::pair<double,double>& v);
         static std::pair<double,double> getCurrentPos();
         static std::pair<double,double> getCurrentDirection();
 
+        static void whenBlockedRecalibration();
         static void updateAngleStartingMove();
         static void updatePositionEndingMove();
 
