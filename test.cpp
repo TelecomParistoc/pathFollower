@@ -2,10 +2,12 @@
  *
  * developped by J. "JS" Schoumacher and A. Bonetti for Telecom Robotics */
 
-#include <pathfollower/pathfollower.h>
-#include <robotdriver/speedcontroller.h>
+#include <pathfollower/pathFollower.hpp>
 #include <robotdriver/motioncontroller.h>
+#include <robotdriver/speedcontroller.h>
+#include <robotdriver/toolboxdriver.h>
 #include <robotdriver/motordriver.h>
+#include <unistd.h>
 #include <iostream>
 
 /*
@@ -25,7 +27,7 @@ int main()
         {700, 100},
         {500, 100},
         {800, 100},
-        {300, 100}
+        {500, 100}
     };
 
     initMotionController();
@@ -36,13 +38,18 @@ int main()
     setCurrentLocation(500,100);
     followPath(path, 4, 0, NULL);
 
+    PathFollower::resetPosition(std::pair<double,double>(500,100));
+    setMoveStartCallback(&PathFollower::updateAngleStartingMove);
+    setMoveEndCallback(&PathFollower::updatePositionEndingMove);
+
     std::pair<double,double> curPos;
     std::pair<double,double> curDir;
     while(1)
     {
-        curPos = pathFollower::getCurrentPos();
-        curDir = pathFollower::getCurrentDirection();
+        curPos = PathFollower::getCurrentPos();
+        curDir = PathFollower::getCurrentDirection();
         std::cout<<curPos.first<<" "<<curPos.second<<";"<<curDir.first<<" "<<curDir.second<<std::endl;
+        waitFor(100);
     }
 
     return 0;

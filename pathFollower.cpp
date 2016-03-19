@@ -12,6 +12,7 @@ bool PathFollower::negativeSpeed = false;
 void (*PathFollower::endCallback)(void) = nullptr;
 std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
+std::list<bool> PathFollower::recalibrate;
 std::pair<double,double> PathFollower::prevPosition;
 std::pair<double,double> PathFollower::currentPosition;
 std::pair<double,double> PathFollower::currentDirection;
@@ -163,6 +164,9 @@ std::pair<double,double> PathFollower::getAngleDistance(double x1, double y1, do
 void PathFollower::standardCallback()
 {
 	setRobotDistance(0);
+    /*prevPosition.first = currentPosition.first;
+    prevPosition.second = currentPosition.second;*/
+    std::cout<<"Reseting distance"<<std::endl;
     if(distances.size())
     {
         //std::cout<<"going of "<<distances.front()<<" "<<negativeSpeed<<" "<<cruiseSpeed<<std::endl;
@@ -224,19 +228,25 @@ bool PathFollower::isOutsideLand(int x, int y)
 void PathFollower::resetPosition(const std::pair<double,double>& v)
 {
     currentPosition = v;
+    prevPosition = v;
     updateAngleStartingMove();
 }
 
 std::pair<double,double> PathFollower::getCurrentPos()
-{return currentPosition;}
+{
+    double d = getDistanceSinceMoveStart();
+    std::cout<<"Passed through "<<d<<std::endl;
+    currentPosition.first = prevPosition.first+currentDirection.first*d;
+    currentPosition.second = prevPosition.second+currentDirection.second*d;
+    return currentPosition;
+}
 
 std::pair<double,double> PathFollower::getCurrentDirection()
 {return currentDirection;}
 
 void PathFollower::updateAngleStartingMove()
 {
-    prevPosition.first = currentPosition.first;
-    prevPosition.second = currentPosition.second;
+    std::cout<<"Position starting"<<std::endl;
     currentAngle = getRobotHeading();
     currentDirection.first = cos(currentAngle/180.0*M_PI);
     currentDirection.second = sin(currentAngle/180.0*M_PI);
@@ -245,6 +255,9 @@ void PathFollower::updateAngleStartingMove()
 void PathFollower::updatePositionEndingMove()
 {
     double d = getDistanceSinceMoveStart();
+    std::cout<<"Position update "<<d<<" "<<prevPosition.first<<" "<<prevPosition.second<<std::endl;
+    auto saved = currentPosition;
     currentPosition.first = prevPosition.first+currentDirection.first*d;
     currentPosition.second = prevPosition.second+currentDirection.second*d;
+    prevPosition = saved;
 }
