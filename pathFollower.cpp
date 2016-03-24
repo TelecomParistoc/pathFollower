@@ -12,6 +12,9 @@ bool PathFollower::negativeSpeed = false;
 void (*PathFollower::endCallback)(void) = nullptr;
 std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
+std::pair<double,double> PathFollower::currentPosition;
+std::pair<double,double> PathFollower::currentDirection;
+double PathFollower::currentAngle = 0;
 
 void PathFollower::setCurrentPosition(double x, double y) {
     curPosX = x;
@@ -185,4 +188,30 @@ void PathFollower::rotateCallback(struct motionElement* element)
             endCallback();
     }
     element++;
+}
+
+void PathFollower::resetPosition(const std::pair<double,double>& v)
+{
+    updateAngleStartingMove();
+    currentPosition = v;
+}
+
+std::pair<double,double> PathFollower::getCurrentPos()
+{return currentPosition;}
+
+std::pair<double,double> PathFollower::getCurrentDirection()
+{return currentDirection;}
+
+void PathFollower::updateAngleStartingMove()
+{
+    currentAngle = getRobotHeading();
+    currentDirection.first = cos(currentAngle/180.0*M_PI);
+    currentDirection.second = sin(currentAngle/180.0*M_PI);
+}
+
+void PathFollower::updatePositionEndingMove()
+{
+    double d = getDistanceSinceMoveStart();
+    currentPosition.first = currentPosition.first+currentDirection.first*d;
+    currentPosition.second = currentPosition.second+currentDirection.second*d;
 }

@@ -42,6 +42,13 @@ class PathFollower
         // when finishing a translation
         static void rotateCallback(struct motionElement* element);
 
+        void resetPosition(const std::pair<double,double>& v);
+        std::pair<double,double> getCurrentPos();
+        std::pair<double,double> getCurrentDirection();
+
+        static void updateAngleStartingMove();
+        static void updatePositionEndingMove();
+
     private:
 	    static bool negativeSpeed;
         static double curPosX, curPosY;
@@ -50,6 +57,10 @@ class PathFollower
         static void (*endCallback)(void);
 
         static std::list<double> angles, distances;
+
+        static std::pair<double,double> currentPosition;
+        static std::pair<double,double> currentDirection;
+        static double currentAngle;
 };
 
 
