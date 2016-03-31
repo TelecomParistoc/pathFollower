@@ -64,7 +64,7 @@ void PathFollower::followPath(const std::string& pathOfPaths)
     while(ifs>>a>>b)
     {
         path.push_back(a);
-        path.push_back(b);
+        path.push_back(2000-b);
     }
     followPath(path);
 }
