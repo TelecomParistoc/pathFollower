@@ -65,6 +65,7 @@ class PathFollower
 
         static std::list<double> angles, distances;
 
+        static std::pair<double,double> prevPosition;
         static std::pair<double,double> currentPosition;
         static std::pair<double,double> currentDirection;
         static double currentAngle;

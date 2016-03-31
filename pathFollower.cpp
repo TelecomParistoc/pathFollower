@@ -64,7 +64,7 @@ void PathFollower::followPath(const std::string& pathOfPaths)
     while(ifs>>a>>b)
     {
         path.push_back(a);
-        path.push_back(2000-b);
+        path.push_back(b);
     }
     followPath(path);
 }
@@ -215,8 +215,8 @@ void PathFollower::rotateCallback(struct motionElement* element)
 
 void PathFollower::resetPosition(const std::pair<double,double>& v)
 {
-    updateAngleStartingMove();
     currentPosition = v;
+    updateAngleStartingMove();
 }
 
 std::pair<double,double> PathFollower::getCurrentPos()
@@ -227,6 +227,8 @@ std::pair<double,double> PathFollower::getCurrentDirection()
 
 void PathFollower::updateAngleStartingMove()
 {
+    prevPosition.first = currentPosition.first;
+    prevPosition.second = currentPosition.second;
     currentAngle = getRobotHeading();
     currentDirection.first = cos(currentAngle/180.0*M_PI);
     currentDirection.second = sin(currentAngle/180.0*M_PI);
@@ -235,6 +237,6 @@ void PathFollower::updateAngleStartingMove()
 void PathFollower::updatePositionEndingMove()
 {
     double d = getDistanceSinceMoveStart();
-    currentPosition.first = currentPosition.first+currentDirection.first*d;
-    currentPosition.second = currentPosition.second+currentDirection.second*d;
+    currentPosition.first = prevPosition.first+currentDirection.first*d;
+    currentPosition.second = prevPosition.second+currentDirection.second*d;
 }
