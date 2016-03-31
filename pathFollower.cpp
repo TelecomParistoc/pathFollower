@@ -46,6 +46,29 @@ void PathFollower::followPath(const struct robotPoint* points, const int length)
     followPath(pointsToVisit);
 }
 
+void PathFollower::followPath(const std::string& pathOfPaths)
+{
+    std::vector<double> path;
+    std::ifstream ifs(pathOfPaths.c_str(),std::ios::in);
+    if(!ifs)
+    {
+        std::cout<<"Warning, non existing path file, ignoring ..."<<std::endl;
+        return;
+    }
+    if(!(ifs>>endSpeed>>cruiseSpeed))
+    {
+        std::cout<<"Warning, non set endSpeed or cruiseSpeed, ignoring ..."<<std::endl;
+        return;
+    }
+    double a, b;
+    while(ifs>>a>>b)
+    {
+        path.push_back(a);
+        path.push_back(b);
+    }
+    followPath(path);
+}
+
 void PathFollower::followPath(const std::vector<double>& path)
 {
     if(path.size()<2)

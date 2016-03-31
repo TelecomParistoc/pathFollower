@@ -31,7 +31,13 @@ class PathFollower
 
         // C friendly
         static void followPath(const struct robotPoint* points, const int length);
-        // not C friendly. Baaaad
+        // not C friendly. Baaaad. TG arnaud
+        /**
+        First follow path take a filename as argument, which must be parsed as follow :
+        endSpeed [space or carriage return] cruiseSpeed [space or carriage return] (x [space or carriage return] y [space or carriage return])*N
+        where N could be arbitrary long or not
+        **/
+        static void followPath(const std::string& pathOfPath);
         static void followPath(const std::vector<double>& path);
 	    static void followPathCallback(const std::vector<double>& points, void (*endCallback)(void), double endSpeed = 0);
 
