@@ -12,6 +12,7 @@ bool PathFollower::negativeSpeed = false;
 void (*PathFollower::endCallback)(void) = nullptr;
 std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
+std::pair<double,double> PathFollower::prevPosition;
 std::pair<double,double> PathFollower::currentPosition;
 std::pair<double,double> PathFollower::currentDirection;
 double PathFollower::currentAngle = 0;
