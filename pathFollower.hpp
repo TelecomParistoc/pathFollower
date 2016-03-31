@@ -48,9 +48,9 @@ class PathFollower
         // when finishing a translation
         static void rotateCallback(struct motionElement* element);
 
-        void resetPosition(const std::pair<double,double>& v);
-        std::pair<double,double> getCurrentPos();
-        std::pair<double,double> getCurrentDirection();
+        static void resetPosition(const std::pair<double,double>& v);
+        static std::pair<double,double> getCurrentPos();
+        static std::pair<double,double> getCurrentDirection();
 
         static void updateAngleStartingMove();
         static void updatePositionEndingMove();
