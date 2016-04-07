@@ -46,7 +46,14 @@ int main() {
     setCurrentLocation(500,100);
     followPath(path, 4, 0, NULL);
 
-    while(1);
+    std::pair<double,double> curPos;
+    std::pair<double,double> curDir;
+    while(1)
+    {
+        curPos = pathFollower::getCurrentPos();
+        curDir = pathFollower::getCurrentDirection();
+        std::cout<<curPos.first<<" "<<curPos.second<<";"<<curDir.first<<" "<<curDir.second<<std::endl;
+    }
 
     return 0;
 }
