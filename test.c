@@ -19,18 +19,8 @@ void onTheEndOfTheRoad() {
     //followPath(path, 2, 0, NULL);
 }*/
 
-int main() {
-    // the path the robot has to follow ({x, y} in mm)
-    /*struct robotPoint path[] = {
-        {330, 280},
-        {360, 250},
-        {390, 240},
-        {430, 230},
-        {480, 220},
-        {480, 210},
-        {490, 210}
-    };*/
-
+int main()
+{
     struct robotPoint path[] = {
         {700, 100},
         {500, 100},
