@@ -6,7 +6,7 @@
 #include <robotdriver/speedcontroller.h>
 #include <robotdriver/motioncontroller.h>
 #include <robotdriver/motordriver.h>
-#include <stdio.h>
+#include <iostream>
 
 /*
 // called when the robot has reached the end of the path
@@ -36,7 +36,14 @@ int main()
     setCurrentLocation(500,100);
     followPath(path, 4, 0, NULL);
 
-    while(1);
+    std::pair<double,double> curPos;
+    std::pair<double,double> curDir;
+    while(1)
+    {
+        curPos = pathFollower::getCurrentPos();
+        curDir = pathFollower::getCurrentDirection();
+        std::cout<<curPos.first<<" "<<curPos.second<<";"<<curDir.first<<" "<<curDir.second<<std::endl;
+    }
 
     return 0;
 }

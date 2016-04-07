@@ -49,6 +49,8 @@ class PathFollower
         // when finishing a translation
         static void rotateCallback(struct motionElement* element);
 
+        static bool isOutsideLand(int x, int y);
+
         static void resetPosition(const std::pair<double,double>& v);
         static std::pair<double,double> getCurrentPos();
         static std::pair<double,double> getCurrentDirection();
@@ -64,6 +66,7 @@ class PathFollower
         static void (*endCallback)(void);
 
         static std::list<double> angles, distances;
+        static std::list<bool> recalibrate;
 
         static std::pair<double,double> prevPosition;
         static std::pair<double,double> currentPosition;

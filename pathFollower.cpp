@@ -87,6 +87,7 @@ void PathFollower::followPath(const std::vector<double>& path)
     {
         angles.push_back(angleDistance.first);
         distances.push_back(angleDistance.second);
+        recalibrate.push_back(isOutsideLand(path[0],path[1]));
     }
 
     for(unsigned int i=2;i<path.size();i+=2) {
@@ -95,6 +96,7 @@ void PathFollower::followPath(const std::vector<double>& path)
         {
             angles.push_back(angleDistance.first);
             distances.push_back(angleDistance.second);
+            recalibrate.push_back(isOutsideLand(path[i],path[i+1]));
         }
         curPosX = path[i];
         curPosY = path[i+1];
@@ -212,6 +214,11 @@ void PathFollower::rotateCallback(struct motionElement* element)
             endCallback();
     }
     element++;
+}
+
+bool PathFollower::isOutsideLand(int x, int y)
+{
+    return x<0||y<0||x>3000||y>2000;
 }
 
 void PathFollower::resetPosition(const std::pair<double,double>& v)
