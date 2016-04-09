@@ -24,20 +24,21 @@ void onTheEndOfTheRoad() {
 int main()
 {
     struct robotPoint path[] = {
-        {800, 100},
-        {500, 100},
-        {800, 100},
+        {800, 1000},
+        {800, -200},
+        {800, 1000},
         {500, 100}
     };
     initMotionController();
     setRobotDistance(0);
     setRobotHeading(0);
 
-    //setCurrentLocation(300,1110);
-    setCurrentLocation(500,100);
+    setCurrentLocation(800,1000);
     followPath(path, 4, 0, NULL);
 
-    PathFollower::resetPosition(std::pair<double,double>(500,100));
+    PathFollower::resetPosition(std::pair<double,double>(800,1000));
+    //TODO: mesurer le rayon du robot quand il avance => PathFollower::setRadius();
+    //TODO: mesurer la distance de recul optimale => PathFollower::setDistanceToGoAway();
     setMoveStartCallback(&PathFollower::updateAngleStartingMove);
     setMoveEndCallback(&PathFollower::updatePositionEndingMove);
 

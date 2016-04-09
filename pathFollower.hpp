@@ -60,6 +60,9 @@ class PathFollower
         static void updateAngleStartingMove();
         static void updatePositionEndingMove();
 
+        static void setRadius(double r);
+        static void setDistanceToGoAway(double d);
+
     private:
 	    static bool negativeSpeed;
         static double curPosX, curPosY;
@@ -69,11 +72,15 @@ class PathFollower
 
         static std::list<double> angles, distances;
         static std::list<bool> recalibrate;
+        static std::list<std::pair<double,double> > positionAfterRecalibration;
 
         static std::pair<double,double> prevPosition;
         static std::pair<double,double> currentPosition;
         static std::pair<double,double> currentDirection;
         static double currentAngle;
+
+        static double radius;
+        static double distanceToGoAway;
 };
 
 

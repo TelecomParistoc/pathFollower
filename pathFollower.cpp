@@ -13,10 +13,13 @@ void (*PathFollower::endCallback)(void) = nullptr;
 std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
 std::list<bool> PathFollower::recalibrate;
+std::list<std::pair<double,double> > PathFollower::positionAfterRecalibration;
 std::pair<double,double> PathFollower::prevPosition;
 std::pair<double,double> PathFollower::currentPosition;
 std::pair<double,double> PathFollower::currentDirection;
 double PathFollower::currentAngle = 0;
+double PathFollower::radius = 80;
+double PathFollower::distanceToGoAway = 180;
 
 void PathFollower::setCurrentPosition(double x, double y) {
     curPosX = x;
@@ -95,7 +98,7 @@ void PathFollower::followPath(const std::vector<double>& path)
             angles.push_back(angleDistance.first);
             distances.push_back(angleDistance.second);
             recalibrate.push_back(true);
-            //positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
+            positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
         }
         else
             recalibrate.push_back(false);
@@ -115,7 +118,7 @@ void PathFollower::followPath(const std::vector<double>& path)
                 angles.push_back(angleDistance.first);
                 distances.push_back(angleDistance.second);
                 recalibrate.push_back(true);
-                //positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
+                positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
             }
             else
                 recalibrate.push_back(false);
@@ -205,8 +208,8 @@ void PathFollower::standardCallback()
             else
                 queueStopAt(distances.front(), &PathFollower::rotateCallback);
         }
-        /*if(recalibrate.front())
-            setRecalibrationCallback(PathFollower::whenBlockedRecalibration);*/
+        if(recalibrate.front())
+            setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
         recalibrate.pop_front();
         distances.pop_front();
     }
@@ -252,11 +255,29 @@ std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::proj
     std::pair<std::pair<double,double>,std::pair<double,double> > res;
     res.first.first = x;
     res.first.second = y;
-    return res;
-    /*if(x<0)
+    //on se recalibre en x, y reste inchangé
+    if(x<0)
     {
-        res.first.first =
-    }*/
+        res.first.first = radius;
+        res.second.first = radius+distanceToGoAway;
+    }
+    else if(x>3000)
+    {
+        res.first.first = 3000-radius;
+        res.second.first = 3000-radius-distanceToGoAway;
+    }
+    //on se recalibre en y, x reste inchangé
+    else if(y<0)
+    {
+        res.first.second = radius;
+        res.second.second = radius+distanceToGoAway;
+    }
+    else if(y>2000)
+    {
+        res.first.second = 2000-radius;
+        res.second.second = 2000-radius-distanceToGoAway;
+    }
+    return res;
 }
 
 void PathFollower::resetPosition(const std::pair<double,double>& v)
@@ -280,7 +301,11 @@ std::pair<double,double> PathFollower::getCurrentDirection()
 
 void PathFollower::whenBlockedRecalibration()
 {
-
+    std::pair<double,double> recalibrationPosition = positionAfterRecalibration.front();
+    setCurrentLocation(recalibrationPosition.first,recalibrationPosition.second);
+    resetPosition(recalibrationPosition);
+    /**TODO : cancel current move **/
+    rotateCallback();
 }
 
 void PathFollower::updateAngleStartingMove()
@@ -300,3 +325,9 @@ void PathFollower::updatePositionEndingMove()
     currentPosition.second = prevPosition.second+currentDirection.second*d;
     prevPosition = saved;
 }
+
+void PathFollower::setRadius(double r)
+{radius = r;}
+
+void PathFollower::setDistanceToGoAway(double d)
+{distanceToGoAway = d;}
