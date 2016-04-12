@@ -276,7 +276,7 @@ bool PathFollower::isOutsideLand(int x, int y)
     return x<0||y<0||x>3000||y>2000;
 }
 
-std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::projectInLand(int x, int y, int prevX, int prevY, int& type, int& dist)
+std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::projectInLand(int x, int y, int prevX, int prevY, int& type, float& dist)
 {
     std::pair<std::pair<double,double>,std::pair<double,double> > res;
     res.first.first = x;
