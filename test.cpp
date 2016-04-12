@@ -2,12 +2,10 @@
  *
  * developped by J. "JS" Schoumacher and A. Bonetti for Telecom Robotics */
 
-#include <pathfollower/pathFollower.hpp>
-#include <robotdriver/motioncontroller.h>
+#include <pathfollower/pathfollower.h>
 #include <robotdriver/speedcontroller.h>
-#include <robotdriver/toolboxdriver.h>
+#include <robotdriver/motioncontroller.h>
 #include <robotdriver/motordriver.h>
-#include <unistd.h>
 #include <iostream>
 
 /*
@@ -24,23 +22,19 @@ void onTheEndOfTheRoad() {
 int main()
 {
     struct robotPoint path[] = {
-        {800, 1000},
-        {800, -200},
-        {800, 1000},
-        {500, 100}
+        {100, 1110},
+        {400, -100},
+        {400, 600},
+        {100, 1110}
     };
+
     initMotionController();
     setRobotDistance(0);
     setRobotHeading(0);
 
-    setCurrentLocation(800,1000);
+    //setCurrentLocation(300,1110);
+    setCurrentLocation(100,1110);
     followPath(path, 4, 0, NULL);
-
-    PathFollower::resetPosition(std::pair<double,double>(800,1000));
-    //TODO: mesurer le rayon du robot quand il avance => PathFollower::setRadius();
-    //TODO: mesurer la distance de recul optimale => PathFollower::setDistanceToGoAway();
-    setMoveStartCallback(&PathFollower::updateAngleStartingMove);
-    setMoveEndCallback(&PathFollower::updatePositionEndingMove);
 
     std::pair<double,double> curPos;
     std::pair<double,double> curDir;
@@ -49,7 +43,6 @@ int main()
         curPos = PathFollower::getCurrentPos();
         curDir = PathFollower::getCurrentDirection();
         std::cout<<curPos.first<<" "<<curPos.second<<";"<<curDir.first<<" "<<curDir.second<<std::endl;
-        waitFor(100);
     }
 
     return 0;
