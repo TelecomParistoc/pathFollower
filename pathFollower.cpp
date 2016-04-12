@@ -232,6 +232,7 @@ void PathFollower::standardCallback()
         }
         if(recalibrate.front())
         {
+            std::cout<<"Recalibration enclenchee "<<type_recal.front()<<std::endl;
             setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
             distancesRecalibration.pop_front();
         }
