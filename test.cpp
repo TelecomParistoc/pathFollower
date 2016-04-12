@@ -33,7 +33,8 @@ int main()
     setRobotDistance(0);
     setRobotHeading(0);
 
-    //setCurrentLocation(300,1110);
+    setMoveStartCallback(&PathFollower::updateAngleStartingMove);
+    setMoveEndCallback(&PathFollower::updatePositionEndingMove);
     setCurrentLocation(100,1110);
     followPath(path, 4, 0, NULL);
 
