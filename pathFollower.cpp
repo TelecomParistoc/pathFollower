@@ -76,13 +76,15 @@ void PathFollower::followPath(const std::string& pathOfPaths)
     followPath(path);
 }
 
-void PathFollower::followPath(std::vector<double>& path)
+void PathFollower::followPath(const std::vector<double>& path_to_copy)
 {
     if(path.size()<2)
     {
         std::cout<<"WARNING : the path is empty, ignoring ..."<<std::endl;
         return;
     }
+
+    std::vector<double> path = path_to_copy;
 
     // make sure everything is clean
     angles.clear();
