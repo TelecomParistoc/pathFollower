@@ -49,7 +49,7 @@ class PathFollower
         // when finishing a translation
         static void rotateCallback(struct motionElement* element);
 
-        static bool isOutsideLand(int x, int y);
+        static bool isOutsideLand(int x, int y, int prevX, int prevY, int& type, float& dist);
         static std::pair<std::pair<double,double>,std::pair<double,double> > projectInLand(int x, int y);
 
         static void resetPosition(const std::pair<double,double>& v);
