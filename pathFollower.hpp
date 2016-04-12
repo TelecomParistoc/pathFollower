@@ -57,6 +57,7 @@ class PathFollower
         static std::pair<double,double> getCurrentDirection();
 
         static void whenBlockedRecalibration();
+        static void disableHeading();
         static void updateAngleStartingMove();
         static void updatePositionEndingMove();
 
@@ -73,6 +74,8 @@ class PathFollower
         static std::list<double> angles, distances;
         static std::list<bool> recalibrate;
         static std::list<std::pair<double,double> > positionAfterRecalibration;
+        static std::list<float> distancesRecalibration;
+        static std::list<int> type_recal;
 
         static std::pair<double,double> prevPosition;
         static std::pair<double,double> currentPosition;

@@ -14,6 +14,8 @@ std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
 std::list<bool> PathFollower::recalibrate;
 std::list<std::pair<double,double> > PathFollower::positionAfterRecalibration;
+std::list<float> PathFollower::distancesRecalibration;
+std::list<int> PathFollower::type_recal;
 std::pair<double,double> PathFollower::prevPosition;
 std::pair<double,double> PathFollower::currentPosition;
 std::pair<double,double> PathFollower::currentDirection;
@@ -93,12 +95,18 @@ void PathFollower::followPath(const std::vector<double>& path)
         distances.push_back(angleDistance.second);
         if(isOutsideLand(path[0],path[1]))
         {
-            auto projected = projectInLand(path[0],path[1]);
-            angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
+            int type;
+            float dist;
+            auto projected = projectInLand(path[0],path[1],curPosX,curPosY,type,dist);
+            /*angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
             angles.push_back(angleDistance.first);
-            distances.push_back(angleDistance.second);
+            distances.push_back(angleDistance.second);*/
+            path[0] = projected.second.first;
+            path[1] = projected.second.second;
             recalibrate.push_back(true);
             positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
+            type_recal.push_back(type);
+            distancesRecalibration.push_back(dist);
         }
         else
             recalibrate.push_back(false);
@@ -113,12 +121,18 @@ void PathFollower::followPath(const std::vector<double>& path)
             distances.push_back(angleDistance.second);
             if(isOutsideLand(path[i],path[i+1]))
             {
-                auto projected = projectInLand(path[0],path[1]);
-                angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
+                int type;
+                float dist;
+                auto projected = projectInLand(path[i],path[i+1],path[i-2],path[i-1],type,dist);
+                /*angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
                 angles.push_back(angleDistance.first);
-                distances.push_back(angleDistance.second);
+                distances.push_back(angleDistance.second);*/
+                path[i] = projected.second.first;
+                path[i+1] = projected.second.second;
                 recalibrate.push_back(true);
                 positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
+                type_recal.push_back(type);
+                distancesRecalibration.push_back(dist);
             }
             else
                 recalibrate.push_back(false);
@@ -191,10 +205,14 @@ void PathFollower::standardCallback()
     std::cout<<"Reseting distance"<<std::endl;
     if(distances.size())
     {
-        //std::cout<<"going of "<<distances.front()<<" "<<negativeSpeed<<" "<<cruiseSpeed<<std::endl;
+        if(recalibrate.front())
+            std::cout<<"Recalibrating"<<std::endl;
+        std::cout<<"going of "<<distances.front()<<" "<<negativeSpeed<<" "<<cruiseSpeed<<std::endl;
         if(negativeSpeed)
         {
             queueSpeedChange(-cruiseSpeed, nullptr);
+            if(recalibrate.front())
+                queueSpeedChangeAt(-distancesRecalibration.front(), 0.07, &PathFollower::disableHeading);
             if(distances.size() == 1 && endSpeed != 0)
                 queueSpeedChangeAt(-distances.front(), endSpeed, &PathFollower::rotateCallback);
             else
@@ -203,13 +221,18 @@ void PathFollower::standardCallback()
         else
         {
             queueSpeedChange(cruiseSpeed, nullptr);
+            if(recalibrate.front())
+                queueSpeedChangeAt(distancesRecalibration.front(), 0.07, &PathFollower::disableHeading);
             if(distances.size() == 1 && endSpeed != 0)
                 queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
             else
                 queueStopAt(distances.front(), &PathFollower::rotateCallback);
         }
         if(recalibrate.front())
+        {
             setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
+            distancesRecalibration.pop_front();
+        }
         recalibrate.pop_front();
         distances.pop_front();
     }
@@ -217,7 +240,8 @@ void PathFollower::standardCallback()
 
 void PathFollower::rotateCallback(struct motionElement* element)
 {
-    if(angles.size()) {
+    if(angles.size())
+    {
         //std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
         float angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
         if(angle>=180.0)
@@ -250,33 +274,57 @@ bool PathFollower::isOutsideLand(int x, int y)
     return x<0||y<0||x>3000||y>2000;
 }
 
-std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::projectInLand(int x, int y)
+std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::projectInLand(int x, int y, int prevX, int prevY, int& type, int& dist)
 {
     std::pair<std::pair<double,double>,std::pair<double,double> > res;
     res.first.first = x;
     res.first.second = y;
+
     //on se recalibre en x, y reste inchangé
     if(x<0)
     {
+        type = 0;
         res.first.first = radius;
-        res.second.first = radius+distanceToGoAway;
+        res.first.second = y+(prevY-y)/(prevX-x)*(res.first.first-x);
+        res.second.first = res.first.first+distanceToGoAway;
+        res.second.second = res.first.second;
     }
     else if(x>3000)
     {
+        type = 1;
         res.first.first = 3000-radius;
-        res.second.first = 3000-radius-distanceToGoAway;
+        res.first.second = y+(prevY-y)/(prevX-x)*(res.first.first-x);
+        res.second.first = res.first.first-distanceToGoAway;
+        res.second.second = res.first.second;
     }
-    //on se recalibre en y, x reste inchangé
-    else if(y<0)
+    else
     {
-        res.first.second = radius;
-        res.second.second = radius+distanceToGoAway;
+        //on se recalibre en y, x reste inchangé
+        else if(y<0)
+        {
+            type = 2;
+            res.first.second = radius;
+            res.first.first = x+(prevX-x)/(prevY-y)*(res.first.second-y);
+            res.second.second = res.first.second+distanceToGoAway;
+            res.second.first = res.first.first;
+        }
+        else if(y>2000)
+        {
+            type = 3;
+            res.first.second = 2000-radius;
+            res.first.first = x+(prevX-x)/(prevY-y)*(res.first.second-y);
+            res.second.second = res.first.second+distanceToGoAway;
+            res.second.first = res.first.first;
+        }
+        else
+        {
+            std::cout<<"Bad recalibration with interior point";
+            res.second = res.first;
+        }
     }
-    else if(y>2000)
-    {
-        res.first.second = 2000-radius;
-        res.second.second = 2000-radius-distanceToGoAway;
-    }
+    dist = sqrt((prevX-x)*(prevX-x)+(prevY-y)*(prevY-y))-100;
+    if(dist<10)
+        std::cout<<"Distance computed for deceleration in recalibration is too small : "<<dist<<std::endl;
     return res;
 }
 
@@ -301,11 +349,56 @@ std::pair<double,double> PathFollower::getCurrentDirection()
 
 void PathFollower::whenBlockedRecalibration()
 {
+    std::cout<<"Blocked ! with current angle "<<getRobotHeading()<<" and negative speed ? "<<negativeSpeed<<std::endl;
     std::pair<double,double> recalibrationPosition = positionAfterRecalibration.front();
     setCurrentLocation(recalibrationPosition.first,recalibrationPosition.second);
     resetPosition(recalibrationPosition);
-    /**TODO : cancel current move **/
+
+    std::cout<<"Position reseted "<<recalibrationPosition.first<<" "<<recalibrationPosition.second<<std::endl;
+
+    clearMotionQueue();
+    fastSpeedChange(0);
+    int type = type_recal.front();
+    switch(type)
+    {
+        case 0:
+            if(negativeSpeed)
+                setRobotHeading(0);
+            else
+                setRobotHeading(0);
+            break;
+        case 1:
+            if(negativeSpeed)
+                setRobotHeading(0);
+            else
+                setRobotHeading(0);
+            break;
+        case 2:
+            if(negativeSpeed)
+                setRobotHeading(0);
+            else
+                setRobotHeading(0);
+            break;
+        case 3:
+            if(negativeSpeed)
+                setRobotHeading(0);
+            else
+                setRobotHeading(0);
+            break;
+        default:
+            std::cout<<"Should not happen"<<std::endl;
+            break;
+    }
+    setRobotDistance(0);
+    enableHeadingControl(1);
+    type_recal.pop_front();
+    positionAfterRecalibration.pop_front();
     rotateCallback();
+}
+
+void PathFollower::disableHeading()
+{
+    enableHeadingControl(0);
 }
 
 void PathFollower::updateAngleStartingMove()
