@@ -2,7 +2,7 @@
  *
  * developped by J. "JS" Schoumacher and A. Bonetti for Telecom Robotics */
 
-#include <pathfollower/pathfollower.h>
+#include <pathfollower/pathFollower.hpp>
 #include <robotdriver/speedcontroller.h>
 #include <robotdriver/motioncontroller.h>
 #include <robotdriver/motordriver.h>
