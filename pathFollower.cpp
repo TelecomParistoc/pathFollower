@@ -14,7 +14,7 @@ std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
 std::list<bool> PathFollower::recalibrate;
 std::list<std::pair<double,double> > PathFollower::positionAfterRecalibration;
-std::list<float> PathFollower::distancesRecalibration;
+std::list<double> PathFollower::distancesRecalibration;
 std::list<int> PathFollower::type_recal;
 std::pair<double,double> PathFollower::prevPosition;
 std::pair<double,double> PathFollower::currentPosition;
@@ -98,7 +98,7 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
         if(isOutsideLand(path[0],path[1]))
         {
             int type;
-            float dist;
+            double dist;
             auto projected = projectInLand(path[0],path[1],curPosX,curPosY,type,dist);
             /*angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
             angles.push_back(angleDistance.first);
@@ -124,7 +124,7 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
             if(isOutsideLand(path[i],path[i+1]))
             {
                 int type;
-                float dist;
+                double dist;
                 auto projected = projectInLand(path[i],path[i+1],path[i-2],path[i-1],type,dist);
                 /*angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
                 angles.push_back(angleDistance.first);
@@ -143,7 +143,7 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
         curPosY = path[i+1];
     }
 
-    float angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
+    double angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
     if(angle>=180.0)
         angle -= 360.0;
 
@@ -245,7 +245,7 @@ void PathFollower::rotateCallback(struct motionElement* element)
     if(angles.size())
     {
         //std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
-        float angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
+        double angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
         if(angle>=180.0)
             angle -= 360.0;
         //std::cout<<"Negative speed ? "<<negativeSpeed<<" "<<angle<<" and dest_angle "<<angles.front()<<std::endl;
@@ -276,7 +276,7 @@ bool PathFollower::isOutsideLand(int x, int y)
     return x<0||y<0||x>3000||y>2000;
 }
 
-std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::projectInLand(int x, int y, int prevX, int prevY, int& type, float& dist)
+std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::projectInLand(int x, int y, int prevX, int prevY, int& type, double& dist)
 {
     std::pair<std::pair<double,double>,std::pair<double,double> > res;
     res.first.first = x;
@@ -302,7 +302,7 @@ std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::proj
     else
     {
         //on se recalibre en y, x reste inchangé
-        else if(y<0)
+        if(y<0)
         {
             type = 2;
             res.first.second = radius;
@@ -395,7 +395,7 @@ void PathFollower::whenBlockedRecalibration()
     enableHeadingControl(1);
     type_recal.pop_front();
     positionAfterRecalibration.pop_front();
-    rotateCallback();
+    rotateCallback(NULL);
 }
 
 void PathFollower::disableHeading(motionElement* m)
