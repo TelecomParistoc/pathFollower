@@ -5,6 +5,7 @@
 #include <pathfollower/pathFollower.hpp>
 #include <robotdriver/speedcontroller.h>
 #include <robotdriver/motioncontroller.h>
+#include <robotdriver/toolboxdriver.h>
 #include <robotdriver/motordriver.h>
 #include <iostream>
 
@@ -43,6 +44,7 @@ int main()
         curPos = PathFollower::getCurrentPos();
         curDir = PathFollower::getCurrentDirection();
         std::cout<<curPos.first<<" "<<curPos.second<<";"<<curDir.first<<" "<<curDir.second<<std::endl;
+        waitFor(100);
     }
 
     return 0;
