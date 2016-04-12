@@ -398,9 +398,8 @@ void PathFollower::whenBlockedRecalibration()
     rotateCallback(NULL);
 }
 
-void PathFollower::disableHeading(motionElement* m)
+void PathFollower::disableHeading(motionElement*)
 {
-    m = NULL;
     enableHeadingControl(0);
 }
 
