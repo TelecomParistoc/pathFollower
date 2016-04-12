@@ -95,6 +95,7 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
     {
         angles.push_back(angleDistance.first);
         distances.push_back(angleDistance.second);
+        std::cout<<"Examining "<<path[0]<<" "<<path[1]<<std::endl;
         if(isOutsideLand(path[0],path[1]))
         {
             int type;
@@ -118,6 +119,7 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
     for(unsigned int i=2;i<path.size();i+=2)
     {
         std::pair<double,double> angleDistance = getAngleDistance(path[i-2],path[i-1],path[i],path[i+1]);
+        std::cout<<"Examining "<<path[i]<<" "<<path[i+1]<<std::endl;
         if(angleDistance.second>0.1)
         {
             angles.push_back(angleDistance.first);
@@ -343,7 +345,7 @@ void PathFollower::resetPosition(const std::pair<double,double>& v)
 std::pair<double,double> PathFollower::getCurrentPos()
 {
     double d = getDistanceSinceMoveStart();
-    std::cout<<"Passed through "<<d<<std::endl;
+    std::cout<<"Passed through "<<d<<" "<<prevPosition.first<<";"<<prevPosition.second<<std::endl;
     currentPosition.first = prevPosition.first+currentDirection.first*d;
     currentPosition.second = prevPosition.second+currentDirection.second*d;
     return currentPosition;
