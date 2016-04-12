@@ -400,6 +400,7 @@ void PathFollower::whenBlockedRecalibration()
 
 void PathFollower::disableHeading(motionElement* m)
 {
+    (void*)m;
     enableHeadingControl(0);
 }
 
