@@ -38,7 +38,7 @@ int main()
     setCurrentLocation(100,1110);
     followPath(path, 4, 0, NULL);
 
-    PathFollower::resetPosition(100,1110);
+    PathFollower::resetPosition(std::pair<double,double>(100,1110));
 
     std::pair<double,double> curPos;
     std::pair<double,double> curDir;
