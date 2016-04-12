@@ -57,7 +57,7 @@ class PathFollower
         static std::pair<double,double> getCurrentDirection();
 
         static void whenBlockedRecalibration();
-        static void disableHeading();
+        static void disableHeading(motionElement* m);
         static void updateAngleStartingMove();
         static void updatePositionEndingMove();
 

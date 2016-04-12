@@ -78,7 +78,7 @@ void PathFollower::followPath(const std::string& pathOfPaths)
 
 void PathFollower::followPath(const std::vector<double>& path_to_copy)
 {
-    if(path.size()<2)
+    if(path_to_copy.size()<2)
     {
         std::cout<<"WARNING : the path is empty, ignoring ..."<<std::endl;
         return;
@@ -398,7 +398,7 @@ void PathFollower::whenBlockedRecalibration()
     rotateCallback();
 }
 
-void PathFollower::disableHeading()
+void PathFollower::disableHeading(motionElement* m)
 {
     enableHeadingControl(0);
 }
