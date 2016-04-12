@@ -76,7 +76,7 @@ void PathFollower::followPath(const std::string& pathOfPaths)
     followPath(path);
 }
 
-void PathFollower::followPath(const std::vector<double>& path)
+void PathFollower::followPath(std::vector<double>& path)
 {
     if(path.size()<2)
     {

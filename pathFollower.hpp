@@ -39,7 +39,7 @@ class PathFollower
         where N could be arbitrary long or not
         **/
         static void followPath(const std::string& pathOfPath);
-        static void followPath(const std::vector<double>& path);
+        static void followPath(std::vector<double>& path);
 	    static void followPathCallback(const std::vector<double>& points, void (*endCallback)(void), double endSpeed = 0);
 
         static std::pair<double,double> getAngleDistance(double x1, double y1, double x2, double y2);
