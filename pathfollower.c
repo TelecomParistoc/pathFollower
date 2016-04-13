@@ -22,16 +22,17 @@ void followPath(struct robotPoint* points, int size, double endSpeed, void (*end
     PathFollower::setEndCallback(endCallback);
 }
 
-void ffollow(char * pathName, void (*endCallback)(void)) {
+void ffollow(const char * pathName, void (*endCallback)(void)) {
     std::string pathfile(pathName);
     int config = getTableConfig();
     if(config == 0)
         config = 1;
     if(getTeam() == GREEN_TEAM) {
-        pathfile = "/var/paths/" + pathfile + "-green-" + std::to_string(config);
+        pathfile = "/var/paths/" + pathfile + "-green-" + std::to_string(config)+".path";
     } else {
-        pathfile = "/var/paths/" + pathfile + "-purple-" + std::to_string(config);
+        pathfile = "/var/paths/" + pathfile + "-purple-" + std::to_string(config)+".path";
     }
+    std::cout << pathfile << std::endl;
     PathFollower::followPath(pathfile);
     PathFollower::setEndCallback(endCallback);
 }
