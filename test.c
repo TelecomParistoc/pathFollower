@@ -7,6 +7,7 @@
 #include <robotdriver/motioncontroller.h>
 #include <robotdriver/motordriver.h>
 #include <robotdriver/toolboxdriver.h>
+#include <librobot/robot.h>
 #include <stdio.h>
 
 
@@ -16,15 +17,12 @@ void onTheEndOfTheRoad() {
 }
 
 int main() {
-    initMotionController();
-    initToolboxDriver();
-    setRobotDistance(0);
-    setRobotHeading(0);
+    initRobot();
+    setRGB(0, 200, 200);
 
     setCurrentLocation(40,1000);
     ffollow("mon chem", onTheEndOfTheRoad);
 
     while(1);
-
     return 0;
 }
