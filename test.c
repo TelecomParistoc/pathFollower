@@ -6,21 +6,18 @@
 #include <robotdriver/speedcontroller.h>
 #include <robotdriver/motioncontroller.h>
 #include <robotdriver/motordriver.h>
+#include <robotdriver/toolboxdriver.h>
 #include <stdio.h>
 
 
 // called when the robot has reached the end of the path
 void onTheEndOfTheRoad() {
-    struct robotPoint path[] = {
-        {480, 180},
-        {180, 1160}
-    };
     printf("I've travelled a long way, and now I reached the end of my path.\n");
-    //followPath(path, 2, 0, NULL);
 }
 
 int main() {
     initMotionController();
+    initToolboxDriver();
     setRobotDistance(0);
     setRobotHeading(0);
 
