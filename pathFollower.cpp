@@ -101,13 +101,12 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
             int type;
             double dist;
             auto projected = projectInLand(path[0],path[1],curPosX,curPosY,type,dist);
-            std::array<std::pair<double,double>,2>
             /*angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
             angles.push_back(angleDistance.first);
             distances.push_back(angleDistance.second);*/
-            path[0] = projected.first;
-            path[1] = projected.second;
-            std::cout<<"Projeted : going to "<<path[0]<<" "<<path[1]<<" and then "<<projected.first<<" "<<projected.second<<std::endl;
+            path[0] = projected[0].first;
+            path[1] = projected[0].second;
+            std::cout<<"Projeted : going to "<<path[0]<<" "<<path[1]<<" and then "<<projected[0].first<<" "<<projected[0].second<<std::endl;
             recalibrate.push_back(true);
             positionAfterRecalibration.push_back(projected);
             type_recal.push_back(type);
