@@ -369,11 +369,19 @@ void PathFollower::whenBlockedRecalibration()
     if(type_recal.size())
     {
         std::cout<<"Blocked ! with current angle "<<getRobotHeading()<<" and negative speed ? "<<negativeSpeed<<" "<<type_recal.front()<<std::endl;
-        std::pair<double,double> recalibrationPosition = positionAfterRecalibration.front();
-        setCurrentLocation(recalibrationPosition.first,recalibrationPosition.second);
-        resetPosition(recalibrationPosition);
-
-        std::cout<<"Position reseted "<<recalibrationPosition.first<<" "<<recalibrationPosition.second<<std::endl;
+        auto recalibrationPosition = positionAfterRecalibration.front();
+        if(!negativeSpeed)
+        {
+            std::cout<<"Position reseted "<<recalibrationPosition[0].first<<" "<<recalibrationPosition[0].second<<std::endl;
+            setCurrentLocation(recalibrationPosition[0].first,recalibrationPosition[0].second);
+            resetPosition(recalibrationPosition[0]);
+        }
+        else
+        {
+            std::cout<<"Position reseted "<<recalibrationPosition[1].first<<" "<<recalibrationPosition[1].second<<std::endl;
+            setCurrentLocation(recalibrationPosition[1].first,recalibrationPosition[1].second);
+            resetPosition(recalibrationPosition[1]);
+        }
 
         clearMotionQueue();
         fastSpeedChange(0);
