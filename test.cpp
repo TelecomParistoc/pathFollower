@@ -7,6 +7,7 @@
 #include <robotdriver/motioncontroller.h>
 #include <robotdriver/toolboxdriver.h>
 #include <robotdriver/motordriver.h>
+#include <librobot/robot.h>
 #include <iostream>
 
 /*
