@@ -458,8 +458,8 @@ void PathFollower::updatePositionEndingMove()
     prevPosition = saved;
 }
 
-void PathFollower::setRadius(double r)
-{radius = r;}
+void PathFollower::setRadiusPositiveSpeed(double r)
+{radiusPositiveSpeed = r;}
 
-void PathFollower::setDistanceToGoAway(double d)
-{distanceToGoAway = d;}
+static void setRadiusNegativeSpeed(double r)
+{radiusNegativeSpeed = r;}

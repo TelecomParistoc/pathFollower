@@ -61,8 +61,8 @@ class PathFollower
         static void updateAngleStartingMove();
         static void updatePositionEndingMove();
 
-        static void setRadius(double r);
-        static void setDistanceToGoAway(double d);
+        static void setRadiusPositiveSpeed(double r);
+        static void setRadiusNegativeSpeed(double r);
 
     private:
 	    static bool negativeSpeed;
