@@ -20,8 +20,8 @@ std::pair<double,double> PathFollower::prevPosition;
 std::pair<double,double> PathFollower::currentPosition;
 std::pair<double,double> PathFollower::currentDirection;
 double PathFollower::currentAngle = 0;
-double PathFollower::radius = 80;
-double PathFollower::distanceToGoAway = 180;
+double PathFollower::radiusPositiveSpeed = 113;
+double PathFollower::radiusNegativeSpeed = 40;
 
 void PathFollower::setCurrentPosition(double x, double y) {
     curPosX = x;

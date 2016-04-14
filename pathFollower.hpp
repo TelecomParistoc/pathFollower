@@ -82,8 +82,8 @@ class PathFollower
         static std::pair<double,double> currentDirection;
         static double currentAngle;
 
-        static double radius;
-        static double distanceToGoAway;
+        static double radiusPositiveSpeed;
+        static double radiusNegativeSpeed;
 };
 
 
