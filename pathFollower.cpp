@@ -237,7 +237,6 @@ void PathFollower::standardCallback()
         if(recalibrate.front())
         {
             std::cout<<"Recalibration enclenchee "<<type_recal.front()<<std::endl;
-            setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
             distancesRecalibration.pop_front();
         }
         recalibrate.pop_front();
@@ -356,55 +355,65 @@ std::pair<double,double> PathFollower::getCurrentDirection()
 
 void PathFollower::whenBlockedRecalibration()
 {
-    std::cout<<"Blocked ! with current angle "<<getRobotHeading()<<" and negative speed ? "<<negativeSpeed<<std::endl;
-    std::pair<double,double> recalibrationPosition = positionAfterRecalibration.front();
-    setCurrentLocation(recalibrationPosition.first,recalibrationPosition.second);
-    resetPosition(recalibrationPosition);
-
-    std::cout<<"Position reseted "<<recalibrationPosition.first<<" "<<recalibrationPosition.second<<std::endl;
-
-    clearMotionQueue();
-    fastSpeedChange(0);
-    int type = type_recal.front();
-    switch(type)
+    if(type_recal.size())
     {
-        case 0:
-            if(negativeSpeed)
-                setRobotHeading(0);
-            else
-                setRobotHeading(0);
-            break;
-        case 1:
-            if(negativeSpeed)
-                setRobotHeading(0);
-            else
-                setRobotHeading(0);
-            break;
-        case 2:
-            if(negativeSpeed)
-                setRobotHeading(0);
-            else
-                setRobotHeading(0);
-            break;
-        case 3:
-            if(negativeSpeed)
-                setRobotHeading(0);
-            else
-                setRobotHeading(0);
-            break;
-        default:
-            std::cout<<"Should not happen"<<std::endl;
-            break;
+        std::cout<<"Blocked ! with current angle "<<getRobotHeading()<<" and negative speed ? "<<negativeSpeed<<" "<<type_recal.front()<<std::endl;
+        std::pair<double,double> recalibrationPosition = positionAfterRecalibration.front();
+        setCurrentLocation(recalibrationPosition.first,recalibrationPosition.second);
+        resetPosition(recalibrationPosition);
+
+        std::cout<<"Position reseted "<<recalibrationPosition.first<<" "<<recalibrationPosition.second<<std::endl;
+
+        clearMotionQueue();
+        fastSpeedChange(0);
+        int type = type_recal.front();
+        switch(type)
+        {
+            case 0:
+                if(negativeSpeed)
+                    setRobotHeading(0);
+                else
+                    setRobotHeading(180);
+                break;
+            case 1:
+                if(negativeSpeed)
+                    setRobotHeading(180);
+                else
+                    setRobotHeading(0);
+                break;
+            case 2:
+                if(negativeSpeed)
+                    setRobotHeading(270);
+                else
+                    setRobotHeading(90);
+                break;
+            case 3:
+                if(negativeSpeed)
+                    setRobotHeading(90);
+                else
+                    setRobotHeading(270);
+                break;
+            default:
+                std::cout<<"Should not happen"<<std::endl;
+                break;
+        }
+        setRobotDistance(0);
+        enableHeadingControl(1);
+        type_recal.pop_front();
+        positionAfterRecalibration.pop_front();
+        setRecalibrationCallback(NULL);
     }
-    setRobotDistance(0);
-    enableHeadingControl(1);
-    type_recal.pop_front();
-    positionAfterRecalibration.pop_front();
+    else
+    {
+        setRobotDistance(0);
+        enableHeadingControl(1);
+    }
     rotateCallback(NULL);
 }
 
 void PathFollower::disableHeading(motionElement*)
 {
+    setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
     enableHeadingControl(0);
 }
 
