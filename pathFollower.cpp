@@ -413,6 +413,7 @@ void PathFollower::whenBlockedRecalibration()
 
 void PathFollower::disableHeading(motionElement*)
 {
+    std::cout<<"Disable heading, End of long distance, recalibration callback set"<<std::endl;
     setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
     enableHeadingControl(0);
 }
