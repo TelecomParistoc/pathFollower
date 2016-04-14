@@ -11,7 +11,7 @@ EXEC_DEBUG =$(RELEASE_DEBUG_DIR)/$(TARGET)
 
 CC = g++
 CFLAGS = -Wall -Werror -Wextra -O2 -std=c++11
-LDFLAGS = -lrobotdriver -fPIC -shared
+LDFLAGS = -lrobotdriver -lrobot -fPIC -shared
 LDFLAGS_DEBUG = $(LDFLAGS) -g
 
 .PHONY: all test debug clean createDir install
@@ -20,7 +20,7 @@ all: createDir $(EXEC)
 test: test.c createDir $(EXEC)
 	$(CC) -o $(RELEASE_DIR)/$@ $< $(CFLAGS) -lpathfollower -lrobotdriver -lrobot
 test-cpp: test.cpp createDir $(EXEC)
-	$(CC) -o $(RELEASE_DIR)/$@ $< $(CFLAGS) -lpathfollower -lrobotdriver
+	$(CC) -o $(RELEASE_DIR)/$@ $< $(CFLAGS) -lpathfollower -lrobotdriver -lrobot
 debug: createDir $(EXEC_DEBUG)
 
 $(EXEC): $(OBJ)
