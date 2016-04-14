@@ -30,17 +30,14 @@ int main()
         {100, 1110}
     };*/
 
+    initRobot();
     setRGB(255, 0, 0);
-
-    initMotionController();
-    setRobotDistance(0);
-    setRobotHeading(0);
 
     setMoveStartCallback(&PathFollower::updateAngleStartingMove);
     setMoveEndCallback(&PathFollower::updatePositionEndingMove);
     setCurrentLocation(40,1000);
     //followPath(path, 4, 0, NULL);
-    ffollow("test_toutes_directions", onTheEndOfTheRoad);
+    ffollow("test_calibration_final", NULL);
 
     PathFollower::resetPosition(std::pair<double,double>(40,1000));
 

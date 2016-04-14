@@ -21,7 +21,7 @@ int main() {
     setRGB(0, 200, 200);
 
     setCurrentLocation(40,1000);
-    ffollow("mon chem", onTheEndOfTheRoad);
+    ffollow("bidon", onTheEndOfTheRoad);
 
     while(1);
     return 0;

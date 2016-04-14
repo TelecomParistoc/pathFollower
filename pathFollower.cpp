@@ -91,7 +91,7 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
     distances.clear();
 
     std::pair<double,double> angleDistance = getAngleDistance(curPosX,curPosY,path[0],path[1]);
-    if(angleDistance.second>0.1)
+    if(angleDistance.second>5)
     {
         angles.push_back(angleDistance.first);
         distances.push_back(angleDistance.second);
@@ -116,12 +116,17 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
         else
             recalibrate.push_back(false);
     }
+    else
+    {
+        path[0] = curPosX;
+        path[1] = curPosY;
+    }
 
     for(unsigned int i=2;i<path.size();i+=2)
     {
         std::pair<double,double> angleDistance = getAngleDistance(path[i-2],path[i-1],path[i],path[i+1]);
         std::cout<<"Examining "<<path[i]<<" "<<path[i+1]<<std::endl;
-        if(angleDistance.second>0.1)
+        if(angleDistance.second>5)
         {
             angles.push_back(angleDistance.first);
             distances.push_back(angleDistance.second);
@@ -146,6 +151,11 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
             else
                 recalibrate.push_back(false);
         }
+        else
+        {
+            path[i] = path[i-2];
+            path[i+1] = path[i-1];
+        }
         curPosX = path[i];
         curPosY = path[i+1];
     }
@@ -153,18 +163,15 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
     double angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
     if(angle>=180.0)
         angle -= 360.0;
-
-    //std::cout<<"Negative speed ? "<<negativeSpeed<<std::endl;
-    if(fabs(angles.front()-angle) <= 90.0)
+    double angleModulo = fmod(fabs(angles.front()-angle)+360.0,360.0);
+    if(angleModulo <= 90.0 || angleModulo > 270.0)
         setTargetHeading(angles.front(), &PathFollower::standardCallback);
     else
     {
-        //std::cout<<"Inverse speed => "<<!negativeSpeed<<" "<<fmod(180.0+angles.front(),360.0)<<std::endl;
         negativeSpeed = !negativeSpeed;
         setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
     }
     angles.pop_front();
-    //std::cout<<"turning of "<<angles.front()<<std::endl;
 }
 
 void PathFollower::followPathCallback(const std::vector<double>& points, void (*endCallback)(void), double endSpeed)
@@ -221,7 +228,7 @@ void PathFollower::standardCallback()
         {
             queueSpeedChange(-cruiseSpeed, nullptr);
             if(recalibrate.front())
-                queueSpeedChangeAt(-distancesRecalibration.front(), 0.07, &PathFollower::disableHeading);
+                queueSpeedChangeAt(-distancesRecalibration.front(), 0.1, &PathFollower::disableHeading);
             if(distances.size() == 1 && endSpeed != 0)
                 queueSpeedChangeAt(-distances.front(), endSpeed, &PathFollower::rotateCallback);
             else
@@ -231,7 +238,7 @@ void PathFollower::standardCallback()
         {
             queueSpeedChange(cruiseSpeed, nullptr);
             if(recalibrate.front())
-                queueSpeedChangeAt(distancesRecalibration.front(), 0.07, &PathFollower::disableHeading);
+                queueSpeedChangeAt(distancesRecalibration.front(), 0.1, &PathFollower::disableHeading);
             if(distances.size() == 1 && endSpeed != 0)
                 queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
             else
@@ -258,8 +265,9 @@ void PathFollower::rotateCallback(struct motionElement* element)
             angle = 180.f+angle;
         if(angle>=180.0)
             angle -= 360.0;
-        std::cout<<"Negative speed ? "<<negativeSpeed<<" "<<angle<<" and dest_angle "<<angles.front()<<std::endl;
-        if(fabs(angles.front()-angle) <= 90.0)
+        std::cout<<"Negative speed ? "<<negativeSpeed<<" "<<angle<<" and dest_angle "<<angles.front()<<" "<<angles.front()-angle<<" "<<fabs(angles.front()-angle)+360.0<<" "<<fmod(fabs(angles.front()-angle)+360.0,360.0)<<std::endl;
+        double angleModulo = fmod(fabs(angles.front()-angle)+360.0,360.0);
+        if(angleModulo <= 90.0 || angleModulo > 270.0)
         {
             std::cout<<"We don't inverse speed !"<<negativeSpeed<<" with angle "<<angle<<std::endl;
             if(negativeSpeed)
@@ -323,7 +331,6 @@ std::array<std::pair<double,double>,2> PathFollower::projectInLand(int x, int y,
             res[0].first = x+(prevX-x)/(prevY-y)*(res[0].second-y);
             res[1].second = radiusNegativeSpeed;
             res[1].first = x+(prevX-x)/(prevY-y)*(res[1].second-y);
-            std::cout<<"====================================="<<res[0].first<<" "<<res[0].second<<" "<<res[1].first<<" "<<res[1].second<<std::endl;
         }
         else if(y>2000)
         {
@@ -339,7 +346,9 @@ std::array<std::pair<double,double>,2> PathFollower::projectInLand(int x, int y,
             res[1] = res[0];
         }
     }
+    std::cout<<"====================================="<<res[0].first<<" "<<res[0].second<<" "<<res[1].first<<" "<<res[1].second<<std::endl;
     dist = sqrt((prevX-x)*(prevX-x)+(prevY-y)*(prevY-y))-100;
+    std::cout<<"That gives a computation distance of "<<dist<<std::endl;
     if(dist<10)
         std::cout<<"Distance computed for deceleration in recalibration is too small : "<<dist<<std::endl;
     return res;
@@ -355,7 +364,7 @@ void PathFollower::resetPosition(const std::pair<double,double>& v)
 std::pair<double,double> PathFollower::getCurrentPos()
 {
     double d = getDistanceSinceMoveStart();
-    std::cout<<"Passed through "<<d<<" "<<prevPosition.first<<";"<<prevPosition.second<<std::endl;
+    //std::cout<<"Passed through "<<d<<" "<<prevPosition.first<<";"<<prevPosition.second<<std::endl;
     currentPosition.first = prevPosition.first+currentDirection.first*d;
     currentPosition.second = prevPosition.second+currentDirection.second*d;
     return currentPosition;
@@ -419,6 +428,7 @@ void PathFollower::whenBlockedRecalibration()
         //dans le cas d'une vitesse negative, on reajuste la distance pour aller au prochain point
         if(distances.size()&&negativeSpeed)
             *(distances.begin()) += radiusPositiveSpeed-radiusNegativeSpeed;
+        std::cout<<"Next distance is "<<*(distances.begin())<<std::endl;
         setRobotDistance(0);
         enableHeadingControl(1);
         type_recal.pop_front();
