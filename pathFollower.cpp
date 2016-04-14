@@ -418,7 +418,7 @@ void PathFollower::whenBlockedRecalibration()
         }
         //dans le cas d'une vitesse negative, on reajuste la distance pour aller au prochain point
         if(distances.size()&&negativeSpeed)
-            distances[0] += radiusPositiveSpeed-radiusNegativeSpeed;
+            *(distances.begin()) += radiusPositiveSpeed-radiusNegativeSpeed;
         setRobotDistance(0);
         enableHeadingControl(1);
         type_recal.pop_front();
@@ -461,5 +461,5 @@ void PathFollower::updatePositionEndingMove()
 void PathFollower::setRadiusPositiveSpeed(double r)
 {radiusPositiveSpeed = r;}
 
-static void setRadiusNegativeSpeed(double r)
+void PathFollower::setRadiusNegativeSpeed(double r)
 {radiusNegativeSpeed = r;}
