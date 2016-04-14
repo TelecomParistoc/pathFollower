@@ -322,6 +322,7 @@ std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::proj
             res.first.first = x+(prevX-x)/(prevY-y)*(res.first.second-y);
             res.second.second = res.first.second+distanceToGoAway;
             res.second.first = res.first.first;
+            std::cout<<"====================================="<<res.first.first<<" "<<res.first.second<<" "<<res.second.first<<" "<<res.second.second<<std::endl;
         }
         else if(y>2000)
         {
