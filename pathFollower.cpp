@@ -258,6 +258,7 @@ void PathFollower::rotateCallback(struct motionElement* element)
             angle = 180.f-angle;
         if(fabs(angles.front()-angle) <= 90.0)
         {
+            std::cout<<"We don't inverse speed !"<<negativeSpeed<<" with angle "<<angle<<std::endl;
             if(negativeSpeed)
                 setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
             else
@@ -265,7 +266,7 @@ void PathFollower::rotateCallback(struct motionElement* element)
         }
         else
         {
-            std::cout<<"We inverse speed !"<<!negativeSpeed<<std::endl;
+            std::cout<<"We inverse speed !"<<!negativeSpeed<<" with angle "<<angle<<std::endl;
             negativeSpeed = !negativeSpeed;
             if(negativeSpeed)
                 setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
