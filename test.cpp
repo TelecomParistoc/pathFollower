@@ -40,7 +40,7 @@ int main()
     setMoveEndCallback(&PathFollower::updatePositionEndingMove);
     setCurrentLocation(40,1000);
     //followPath(path, 4, 0, NULL);
-    ffollow("bidon", onTheEndOfTheRoad);
+    ffollow("bidon", NULL);
 
     PathFollower::resetPosition(std::pair<double,double>(40,1000));
 
