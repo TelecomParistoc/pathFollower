@@ -408,6 +408,9 @@ void PathFollower::whenBlockedRecalibration()
                 std::cout<<"Should not happen"<<std::endl;
                 break;
         }
+        //dans le cas d'une vitesse negative, on reajuste la distance pour aller au prochain point
+        if(distances.size()&&negativeSpeed)
+            distances[0] += radiusPositiveSpeed-radiusNegativeSpeed;
         setRobotDistance(0);
         enableHeadingControl(1);
         type_recal.pop_front();
