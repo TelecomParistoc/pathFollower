@@ -111,6 +111,7 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
             positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
             type_recal.push_back(type);
             distancesRecalibration.push_back(dist);
+            std::cout<<"DISTANCE WHEN RECALIBRATION "<<dist<<std::endl;
         }
         else
             recalibrate.push_back(false);
@@ -139,6 +140,7 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
                 positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
                 type_recal.push_back(type);
                 distancesRecalibration.push_back(dist);
+                std::cout<<"DISTANCE WHEN RECALIBRATION "<<dist<<std::endl;
             }
             else
                 recalibrate.push_back(false);
@@ -390,15 +392,15 @@ void PathFollower::whenBlockedRecalibration()
                 break;
             case 2:
                 if(negativeSpeed)
-                    setRobotHeading(270);
-                else
                     setRobotHeading(90);
+                else
+                    setRobotHeading(270);
                 break;
             case 3:
                 if(negativeSpeed)
-                    setRobotHeading(90);
-                else
                     setRobotHeading(270);
+                else
+                    setRobotHeading(90);
                 break;
             default:
                 std::cout<<"Should not happen"<<std::endl;
