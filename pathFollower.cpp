@@ -390,15 +390,15 @@ void PathFollower::whenBlockedRecalibration()
                 break;
             case 2:
                 if(negativeSpeed)
-                    setRobotHeading(90);
-                else
                     setRobotHeading(270);
+                else
+                    setRobotHeading(90);
                 break;
             case 3:
                 if(negativeSpeed)
-                    setRobotHeading(270);
-                else
                     setRobotHeading(90);
+                else
+                    setRobotHeading(270);
                 break;
             default:
                 std::cout<<"Should not happen"<<std::endl;
