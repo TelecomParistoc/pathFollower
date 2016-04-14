@@ -29,6 +29,8 @@ int main()
         {100, 1110}
     };
 
+    setRGB(255, 0, 0);
+
     initMotionController();
     setRobotDistance(0);
     setRobotHeading(0);
