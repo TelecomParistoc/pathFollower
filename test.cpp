@@ -23,12 +23,12 @@ void onTheEndOfTheRoad() {
 
 int main()
 {
-    struct robotPoint path[] = {
+    /*struct robotPoint path[] = {
         {100, 1110},
         {400, -100},
         {400, 600},
         {100, 1110}
-    };
+    };*/
 
     setRGB(255, 0, 0);
 
@@ -38,10 +38,11 @@ int main()
 
     setMoveStartCallback(&PathFollower::updateAngleStartingMove);
     setMoveEndCallback(&PathFollower::updatePositionEndingMove);
-    setCurrentLocation(100,1110);
-    followPath(path, 4, 0, NULL);
+    setCurrentLocation(40,1000);
+    //followPath(path, 4, 0, NULL);
+    ffollow("bidon", onTheEndOfTheRoad);
 
-    PathFollower::resetPosition(std::pair<double,double>(100,1110));
+    PathFollower::resetPosition(std::pair<double,double>(40,1000));
 
     std::pair<double,double> curPos;
     std::pair<double,double> curDir;
