@@ -237,6 +237,7 @@ void PathFollower::standardCallback()
         if(recalibrate.front())
         {
             std::cout<<"Recalibration enclenchee "<<type_recal.front()<<std::endl;
+            setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
             distancesRecalibration.pop_front();
         }
         recalibrate.pop_front();
@@ -408,13 +409,13 @@ void PathFollower::whenBlockedRecalibration()
         setRobotDistance(0);
         enableHeadingControl(1);
     }
+    setRecalibrationCallback(NULL);
     rotateCallback(NULL);
 }
 
 void PathFollower::disableHeading(motionElement*)
 {
     std::cout<<"Disable heading, End of long distance, recalibration callback set"<<std::endl;
-    setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
     enableHeadingControl(0);
 }
 
