@@ -45,6 +45,8 @@ void ffollow(const char * pathName, void (*endCallback)(void));
 double getCurrentX();
 double getCurrentY();
 
+void updateAngleStartingMove();
+void updatePositionEndingMove();
 #ifdef __cplusplus
 }
 #endif

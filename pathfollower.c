@@ -3,6 +3,7 @@
 #include <librobot/robot.h>
 
 void setCurrentLocation(double x, double y) {
+	PathFollower::setCurrentPosition(x, y);
 	PathFollower::resetPosition(std::pair<double, double>(x, y));
 }
 
@@ -37,4 +38,12 @@ double getCurrentX() {
 
 double getCurrentY() {
 	return(PathFollower::getCurrentPos().second);
+}
+
+void updateAngleStartingMove() {
+	PathFollower::updateAngleStartingMove();
+}
+
+void updatePositionEndingMove() {
+	PathFollower::updatePositionEndingMove();
 }
