@@ -106,9 +106,9 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
             /*angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
             angles.push_back(angleDistance.first);
             distances.push_back(angleDistance.second);*/
-            path[0] = projected[0].first;
-            path[1] = projected[0].second;
-            std::cout<<"Projeted : going to "<<path[0]<<" "<<path[1]<<" and then "<<projected[0].first<<" "<<projected[0].second<<std::endl;
+            path[0] = projected[1].first;
+            path[1] = projected[1].second;
+            std::cout<<"Projeted : going to "<<path[0]<<" "<<path[1]<<" and then "<<projected[1].first<<" "<<projected[1].second<<std::endl;
             recalibrate.push_back(true);
             positionAfterRecalibration.push_back(projected);
             type_recal.push_back(type);
@@ -141,9 +141,9 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
                 angles.push_back(angleDistance.first);
                 distances.push_back(angleDistance.second);*/
                 //on accepte un leger decalage qui depend de si le robot va en avant ou en arriere
-                path[i] = projected[0].first;
-                path[i+1] = projected[0].second;
-                std::cout<<"Projeted : going to "<<path[i]<<" "<<path[i+1]<<" and then "<<projected[0].first<<" "<<projected[0].second<<std::endl;
+                path[i] = projected[1].first;
+                path[i+1] = projected[1].second;
+                std::cout<<"Projeted : going to "<<path[i]<<" "<<path[i+1]<<" and then "<<projected[1].first<<" "<<projected[1].second<<std::endl;
                 recalibrate.push_back(true);
                 positionAfterRecalibration.push_back(projected);
                 type_recal.push_back(type);
@@ -388,24 +388,28 @@ void PathFollower::pause()
     if(!paused)
     {
         //possiblement dangereux, mais devrait fonctionner
-        remainingDistance = remainingDistance-getDistanceSinceMoveStart();
+        //remainingDistance = remainingDistance-getDistanceSinceMoveStart();
+        std::cout<<"Entering pause "<<remainingDistance-getDistanceSinceMoveStart()<<std::endl;
         paused = true;
-        ///TODO: stop current movement
+        clearMotionQueue();
+        queueSpeedChange(0, nullptr);
     }
 }
 
 void PathFollower::continueMoving()
 {
+    std::cout<<"On reprend le mouovement"<<std::endl;
     if(paused)
     {
         paused = false;
+        std::cout<<"Negative speed "<<negativeSpeed<<" "<<remainingDistance<<std::endl;
         if(negativeSpeed)
         {
             queueSpeedChange(-cruiseSpeed, nullptr);
             if(distances.size() == 1 && endSpeed != 0)
-                queueSpeedChangeAt(-remainingDistance, endSpeed, &PathFollower::rotateCallback);
+                queueSpeedChangeAt(remainingDistance, endSpeed, &PathFollower::rotateCallback);
             else
-                queueStopAt(-remainingDistance, &PathFollower::rotateCallback);
+                queueStopAt(remainingDistance, &PathFollower::rotateCallback);
         }
         else
         {
@@ -471,7 +475,7 @@ void PathFollower::whenBlockedRecalibration()
                 break;
         }
         //dans le cas d'une vitesse negative, on reajuste la distance pour aller au prochain point
-        if(distances.size()&&negativeSpeed)
+        if(distances.size()&&!negativeSpeed)
             *(distances.begin()) += radiusPositiveSpeed-radiusNegativeSpeed;
         std::cout<<"Next distance is "<<*(distances.begin())<<std::endl;
         setRobotDistance(0);

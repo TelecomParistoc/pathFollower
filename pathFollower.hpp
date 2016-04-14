@@ -90,7 +90,7 @@ class PathFollower
         static double radiusPositiveSpeed;
         static double radiusNegativeSpeed;
 
-        static bool isPaused;
+        static bool paused;
         static double remainingDistance;
 };
 
