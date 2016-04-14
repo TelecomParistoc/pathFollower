@@ -18,7 +18,7 @@ LDFLAGS_DEBUG = $(LDFLAGS) -g
 
 all: createDir $(EXEC)
 test: test.c createDir $(EXEC)
-	$(CC) -o $(RELEASE_DIR)/$@ $< $(CFLAGS) -lpathfollower -lrobotdriver
+	$(CC) -o $(RELEASE_DIR)/$@ $< $(CFLAGS) -lpathfollower -lrobotdriver -lrobot
 test-cpp: test.cpp createDir $(EXEC)
 	$(CC) -o $(RELEASE_DIR)/$@ $< $(CFLAGS) -lpathfollower -lrobotdriver
 debug: createDir $(EXEC_DEBUG)

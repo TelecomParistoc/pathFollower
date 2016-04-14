@@ -44,6 +44,8 @@ void setCruiseSpeed(double speed);
         the whole driver mecanism and may cause erratic behavior. */
 void followPath(struct robotPoint* points, int size, double endSpeed, void (*endCallback)(void));
 
+void ffollow(const char * pathName, void (*endCallback)(void));
+
 #ifdef __cplusplus
 }
 #endif
