@@ -50,7 +50,7 @@ class PathFollower
         static void rotateCallback(struct motionElement* element);
 
         static bool isOutsideLand(int x, int y);
-        static std::pair<std::pair<double,double>,std::pair<double,double> > projectInLand(int x, int y, int prevX, int prevY, int& type, double& dist);
+        static std::array<std::pair<double,double>,2> projectInLand(int x, int y, int prevX, int prevY, int& type, double& dist);
 
         static void resetPosition(const std::pair<double,double>& v);
         static std::pair<double,double> getCurrentPos();
@@ -73,7 +73,7 @@ class PathFollower
 
         static std::list<double> angles, distances;
         static std::list<bool> recalibrate;
-        static std::list<std::pair<double,double> > positionAfterRecalibration;
+        static std::list<std::array<std::pair<double,double>,2> > positionAfterRecalibration;
         static std::list<double> distancesRecalibration;
         static std::list<int> type_recal;
 

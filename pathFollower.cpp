@@ -13,7 +13,7 @@ void (*PathFollower::endCallback)(void) = nullptr;
 std::list<double> PathFollower::angles;
 std::list<double> PathFollower::distances;
 std::list<bool> PathFollower::recalibrate;
-std::list<std::pair<double,double> > PathFollower::positionAfterRecalibration;
+std::list<std::array<std::pair<double,double>,2> > PathFollower::positionAfterRecalibration;
 std::list<double> PathFollower::distancesRecalibration;
 std::list<int> PathFollower::type_recal;
 std::pair<double,double> PathFollower::prevPosition;
@@ -101,14 +101,15 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
             int type;
             double dist;
             auto projected = projectInLand(path[0],path[1],curPosX,curPosY,type,dist);
+            std::array<std::pair<double,double>,2>
             /*angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
             angles.push_back(angleDistance.first);
             distances.push_back(angleDistance.second);*/
-            path[0] = projected.second.first;
-            path[1] = projected.second.second;
-            std::cout<<"Projeted : going to "<<path[0]<<" "<<path[1]<<" and then "<<projected.first.first<<" "<<projected.first.second<<std::endl;
+            path[0] = projected.first;
+            path[1] = projected.second;
+            std::cout<<"Projeted : going to "<<path[0]<<" "<<path[1]<<" and then "<<projected.first<<" "<<projected.second<<std::endl;
             recalibrate.push_back(true);
-            positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
+            positionAfterRecalibration.push_back(projected);
             type_recal.push_back(type);
             distancesRecalibration.push_back(dist);
             std::cout<<"DISTANCE WHEN RECALIBRATION "<<dist<<std::endl;
@@ -133,11 +134,12 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
                 /*angleDistance = getAngleDistance(projected.first.first,projected.first.second,projected.second.first,projected.second.second);
                 angles.push_back(angleDistance.first);
                 distances.push_back(angleDistance.second);*/
-                path[i] = projected.second.first;
-                path[i+1] = projected.second.second;
-                std::cout<<"Projeted : going to "<<path[i]<<" "<<path[i+1]<<" and then "<<projected.first.first<<" "<<projected.first.second<<std::endl;
+                //on accepte un leger decalage qui depend de si le robot va en avant ou en arriere
+                path[i] = projected[0].first;
+                path[i+1] = projected[0].second;
+                std::cout<<"Projeted : going to "<<path[i]<<" "<<path[i+1]<<" and then "<<projected[0].first<<" "<<projected[0].second<<std::endl;
                 recalibrate.push_back(true);
-                positionAfterRecalibration.push_back(std::pair<double,double>(projected.first.first,projected.first.second));
+                positionAfterRecalibration.push_back(projected);
                 type_recal.push_back(type);
                 distancesRecalibration.push_back(dist);
                 std::cout<<"DISTANCE WHEN RECALIBRATION "<<dist<<std::endl;
@@ -289,28 +291,28 @@ bool PathFollower::isOutsideLand(int x, int y)
     return x<0||y<0||x>3000||y>2000;
 }
 
-std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::projectInLand(int x, int y, int prevX, int prevY, int& type, double& dist)
+std::array<std::pair<double,double>,2> PathFollower::projectInLand(int x, int y, int prevX, int prevY, int& type, double& dist)
 {
-    std::pair<std::pair<double,double>,std::pair<double,double> > res;
-    res.first.first = x;
-    res.first.second = y;
+    std::array<std::pair<double,double>,2> res;
+    res[0].first = x;
+    res[0].second = y;
 
     //on se recalibre en x, y reste inchangé
     if(x<0)
     {
         type = 0;
-        res.first.first = radius;
-        res.first.second = y+(prevY-y)/(prevX-x)*(res.first.first-x);
-        res.second.first = res.first.first+distanceToGoAway;
-        res.second.second = res.first.second;
+        res[0].first = radiusPositiveSpeed;
+        res[0].second = y+(prevY-y)/(prevX-x)*(res[0].first-x);
+        res[1].first = radiusNegativeSpeed;
+        res[1].second = y+(prevY-y)/(prevX-x)*(res[1].first-x);
     }
     else if(x>3000)
     {
         type = 1;
-        res.first.first = 3000-radius;
-        res.first.second = y+(prevY-y)/(prevX-x)*(res.first.first-x);
-        res.second.first = res.first.first-distanceToGoAway;
-        res.second.second = res.first.second;
+        res[0].first = 3000-radiusPositiveSpeed;
+        res[0].second = y+(prevY-y)/(prevX-x)*(res[0].first-x);
+        res[1].first = 3000-radiusNegativeSpeed;
+        res[1].second = y+(prevY-y)/(prevX-x)*(res[1].first-x);
     }
     else
     {
@@ -318,24 +320,24 @@ std::pair<std::pair<double,double>,std::pair<double,double> > PathFollower::proj
         if(y<0)
         {
             type = 2;
-            res.first.second = radius;
-            res.first.first = x+(prevX-x)/(prevY-y)*(res.first.second-y);
-            res.second.second = res.first.second+distanceToGoAway;
-            res.second.first = res.first.first;
-            std::cout<<"====================================="<<res.first.first<<" "<<res.first.second<<" "<<res.second.first<<" "<<res.second.second<<std::endl;
+            res[0].second = radiusPositiveSpeed;
+            res[0].first = x+(prevX-x)/(prevY-y)*(res[0].second-y);
+            res[1].second = radiusNegativeSpeed;
+            res[1].first = x+(prevX-x)/(prevY-y)*(res[1].second-y);
+            std::cout<<"====================================="<<res[0].first<<" "<<res[0].second<<" "<<res[1].first<<" "<<res[1].second<<std::endl;
         }
         else if(y>2000)
         {
             type = 3;
-            res.first.second = 2000-radius;
-            res.first.first = x+(prevX-x)/(prevY-y)*(res.first.second-y);
-            res.second.second = res.first.second+distanceToGoAway;
-            res.second.first = res.first.first;
+            res[0].first = 2000-radiusPositiveSpeed;
+            res[0].first = x+(prevX-x)/(prevY-y)*(res[0].second-y);
+            res[1].first = 2000-radiusNegativeSpeed;
+            res[1].first = x+(prevX-x)/(prevY-y)*(res[1].second-y);
         }
         else
         {
             std::cout<<"Bad recalibration with interior point";
-            res.second = res.first;
+            res[1] = res[0];
         }
     }
     dist = sqrt((prevX-x)*(prevX-x)+(prevY-y)*(prevY-y))-100;
