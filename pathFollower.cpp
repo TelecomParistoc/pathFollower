@@ -249,18 +249,18 @@ void PathFollower::rotateCallback(struct motionElement* element)
 {
     if(angles.size())
     {
-        //std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
+        std::cout<<"turning of "<<angles.front()<<" current heading : "<<getRobotHeading()<<std::endl;
         double angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
         if(angle>=180.0)
             angle -= 360.0;
-        //std::cout<<"Negative speed ? "<<negativeSpeed<<" "<<angle<<" and dest_angle "<<angles.front()<<std::endl;
+        std::cout<<"Negative speed ? "<<negativeSpeed<<" "<<angle<<" and dest_angle "<<angles.front()<<std::endl;
         if(negativeSpeed)
             angle = 180.f-angle;
         if(fabs(angles.front()-angle) <= 90.0)
             setTargetHeading(angles.front(), &PathFollower::standardCallback);
         else
         {
-            //std::cout<<"We inverse speed !"<<!negativeSpeed<<std::endl;
+            std::cout<<"We inverse speed !"<<!negativeSpeed<<std::endl;
             negativeSpeed = !negativeSpeed;
             if(negativeSpeed)
                 setTargetHeading(fmod(180.0+angles.front(),360.0), &PathFollower::standardCallback);
