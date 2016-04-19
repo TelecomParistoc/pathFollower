@@ -22,7 +22,7 @@ std::pair<double,double> PathFollower::currentDirection;
 double PathFollower::currentAngle = 0;
 double PathFollower::radiusPositiveSpeed = 113;
 double PathFollower::radiusNegativeSpeed = 40;
-bool PathFollower::isPaused = false;
+bool PathFollower::paused = false;
 double PathFollower::remainingDistance = 0;
 
 void PathFollower::setCurrentPosition(double x, double y) {
@@ -381,24 +381,24 @@ bool PathFollower::isSpeedPositive()
 {return !negativeSpeed;}
 
 bool PathFollower::isPaused()
-{return isPaused;}
+{return paused;}
 
 void PathFollower::pause()
 {
-    if(!isPaused)
+    if(!paused)
     {
         //possiblement dangereux, mais devrait fonctionner
         remainingDistance = remainingDistance-getDistanceSinceMoveStart();
-        isPaused = true;
+        paused = true;
         ///TODO: stop current movement
     }
 }
 
 void PathFollower::continueMoving()
 {
-    if(isPaused)
+    if(paused)
     {
-        isPaused = false;
+        paused = false;
         if(negativeSpeed)
         {
             queueSpeedChange(-cruiseSpeed, nullptr);
