@@ -10,34 +10,17 @@
 #include <librobot/robot.h>
 #include <iostream>
 
-/*
-// called when the robot has reached the end of the path
-void onTheEndOfTheRoad() {
-    struct robotPoint path[] = {
-        {480, 180},
-        {180, 1160}
-    };
-    printf("I've travelled a long way, and now I reached the end of my path.\n");
-    //followPath(path, 2, 0, NULL);
-}*/
 
 int main()
 {
-    /*struct robotPoint path[] = {
-        {100, 1110},
-        {400, -100},
-        {400, 600},
-        {100, 1110}
-    };*/
-
     initRobot();
     setRGB(255, 0, 0);
+
 
     setMoveStartCallback(&PathFollower::updateAngleStartingMove);
     setMoveEndCallback(&PathFollower::updatePositionEndingMove);
     setCurrentLocation(40,1000);
-    //followPath(path, 4, 0, NULL);
-    ffollow("test_calibration_final", NULL);
+    ffollow("bidon", NULL);
 
     PathFollower::resetPosition(std::pair<double,double>(40,1000));
 

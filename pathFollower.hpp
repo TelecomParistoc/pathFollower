@@ -56,6 +56,11 @@ class PathFollower
         static std::pair<double,double> getCurrentPos();
         static std::pair<double,double> getCurrentDirection();
 
+        static bool isSpeedPositive();
+        static bool isPaused();
+        static void pause();
+        static void continueMoving();
+
         static void whenBlockedRecalibration();
         static void disableHeading(motionElement* m);
         static void updateAngleStartingMove();
@@ -84,6 +89,9 @@ class PathFollower
 
         static double radiusPositiveSpeed;
         static double radiusNegativeSpeed;
+
+        static bool isPaused;
+        static double remainingDistance;
 };
 
 

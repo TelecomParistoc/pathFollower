@@ -22,6 +22,8 @@ std::pair<double,double> PathFollower::currentDirection;
 double PathFollower::currentAngle = 0;
 double PathFollower::radiusPositiveSpeed = 113;
 double PathFollower::radiusNegativeSpeed = 40;
+bool PathFollower::isPaused = false;
+double PathFollower::remainingDistance = 0;
 
 void PathFollower::setCurrentPosition(double x, double y) {
     curPosX = x;
@@ -233,6 +235,7 @@ void PathFollower::standardCallback()
                 queueSpeedChangeAt(-distances.front(), endSpeed, &PathFollower::rotateCallback);
             else
                 queueStopAt(-distances.front(), &PathFollower::rotateCallback);
+            remainingDistance = -distances.front();
         }
         else
         {
@@ -243,6 +246,7 @@ void PathFollower::standardCallback()
                 queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
             else
                 queueStopAt(distances.front(), &PathFollower::rotateCallback);
+            remainingDistance = distances.front();
         }
         if(recalibrate.front())
         {
@@ -372,6 +376,47 @@ std::pair<double,double> PathFollower::getCurrentPos()
 
 std::pair<double,double> PathFollower::getCurrentDirection()
 {return currentDirection;}
+
+bool PathFollower::isSpeedPositive()
+{return !negativeSpeed;}
+
+bool PathFollower::isPaused()
+{return isPaused;}
+
+void PathFollower::pause()
+{
+    if(!isPaused)
+    {
+        //possiblement dangereux, mais devrait fonctionner
+        remainingDistance = remainingDistance-getDistanceSinceMoveStart();
+        isPaused = true;
+        ///TODO: stop current movement
+    }
+}
+
+void PathFollower::continueMoving()
+{
+    if(isPaused)
+    {
+        isPaused = false;
+        if(negativeSpeed)
+        {
+            queueSpeedChange(-cruiseSpeed, nullptr);
+            if(distances.size() == 1 && endSpeed != 0)
+                queueSpeedChangeAt(-remainingDistance, endSpeed, &PathFollower::rotateCallback);
+            else
+                queueStopAt(-remainingDistance, &PathFollower::rotateCallback);
+        }
+        else
+        {
+            queueSpeedChange(cruiseSpeed, nullptr);
+            if(distances.size() == 1 && endSpeed != 0)
+                queueSpeedChangeAt(remainingDistance, endSpeed, &PathFollower::rotateCallback);
+            else
+                queueStopAt(remainingDistance, &PathFollower::rotateCallback);
+        }
+    }
+}
 
 void PathFollower::whenBlockedRecalibration()
 {
