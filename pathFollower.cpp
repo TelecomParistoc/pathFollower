@@ -162,6 +162,8 @@ void PathFollower::followPath(const std::vector<double>& path_to_copy)
         curPosY = path[i+1];
     }
 
+    negativeSpeed = false;
+
     double angle = fmod(fmod(getRobotHeading(),360.0)+360.0,360.0);
     if(angle>=180.0)
         angle -= 360.0;
