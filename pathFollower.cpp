@@ -246,7 +246,7 @@ void PathFollower::standardCallback()
             if(recalibrate.front())
             {
                 std::cout<<"moving "<<distancesRecalibration.front()<<std::endl;
-                queueSpeedChangeAt(distancesRecalibration.front(), 0.1, &PathFollower::disableHeading);
+                queueSpeedChangeAt(distancesRecalibration.front(), 0.1, &PathFollower::bleHeading);
             }
             if(distances.size() == 1 && endSpeed != 0)
                 queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
@@ -501,6 +501,7 @@ void PathFollower::whenBlockedRecalibration()
 void PathFollower::disableHeading(motionElement*)
 {
     std::cout<<"Disable heading, End of long distance, recalibration callback set"<<std::endl;
+    fastSpeedChange(-0.1);
     setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
     enableHeadingControl(0);
     exit(0);
