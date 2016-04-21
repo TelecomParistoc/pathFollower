@@ -230,7 +230,10 @@ void PathFollower::standardCallback()
         {
             queueSpeedChange(-cruiseSpeed, nullptr);
             if(recalibrate.front())
+            {
+                std::cout<<"moving "<<-distancesRecalibration.front()<<std::endl;
                 queueSpeedChangeAt(-distancesRecalibration.front(), 0.1, &PathFollower::disableHeading);
+            }
             if(distances.size() == 1 && endSpeed != 0)
                 queueSpeedChangeAt(-distances.front(), endSpeed, &PathFollower::rotateCallback);
             else
@@ -241,7 +244,10 @@ void PathFollower::standardCallback()
         {
             queueSpeedChange(cruiseSpeed, nullptr);
             if(recalibrate.front())
+            {
+                std::cout<<"moving "<<distancesRecalibration.front()<<std::endl;
                 queueSpeedChangeAt(distancesRecalibration.front(), 0.1, &PathFollower::disableHeading);
+            }
             if(distances.size() == 1 && endSpeed != 0)
                 queueSpeedChangeAt(distances.front(), endSpeed, &PathFollower::rotateCallback);
             else
@@ -251,7 +257,6 @@ void PathFollower::standardCallback()
         if(recalibrate.front())
         {
             std::cout<<"Recalibration enclenchee "<<type_recal.front()<<std::endl;
-            setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
             distancesRecalibration.pop_front();
         }
         recalibrate.pop_front();
@@ -496,6 +501,7 @@ void PathFollower::whenBlockedRecalibration()
 void PathFollower::disableHeading(motionElement*)
 {
     std::cout<<"Disable heading, End of long distance, recalibration callback set"<<std::endl;
+    setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
     enableHeadingControl(0);
 }
 
