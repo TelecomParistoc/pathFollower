@@ -232,8 +232,7 @@ void PathFollower::standardCallback()
             if(recalibrate.front())
             {
                 std::cout<<"moving "<<-distancesRecalibration.front()<<std::endl;
-                exit(0);
-                queueSpeedChangeAt(-distancesRecalibration.front(), 0.1, &PathFollower::disableHeading);
+                queueSpeedChangeAt(-distancesRecalibration.front(), -0.1, &PathFollower::disableHeading);
             }
             if(distances.size() == 1 && endSpeed != 0)
                 queueSpeedChangeAt(-distances.front(), endSpeed, &PathFollower::rotateCallback);
