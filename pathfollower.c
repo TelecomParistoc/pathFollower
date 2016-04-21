@@ -3,13 +3,7 @@
 #include <librobot/robot.h>
 
 void setCurrentLocation(double x, double y) {
-    PathFollower::setCurrentPosition(x, y);
-}
-void setCurrentX(double x) {
-    PathFollower::setCurrentX(x);
-}
-void setCurrentY(double y) {
-    PathFollower::setCurrentY(y);
+	PathFollower::resetPosition(std::pair<double, double>(x, y));
 }
 
 void setCruiseSpeed(double speed) {
@@ -35,4 +29,12 @@ void ffollow(const char * pathName, void (*endCallback)(void)) {
     std::cout << pathfile << std::endl;
     PathFollower::followPath(pathfile);
     PathFollower::setEndCallback(endCallback);
+}
+
+double getCurrentX() {
+	return(PathFollower::getCurrentPos().first);
+}
+
+double getCurrentY() {
+	return(PathFollower::getCurrentPos().second);
 }

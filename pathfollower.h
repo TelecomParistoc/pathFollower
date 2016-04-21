@@ -25,10 +25,6 @@ struct robotPoint {
 /* set the current robot absolute location. By default, the robot starts at (0,0)
  * x, y: coordinates in mm */
 void setCurrentLocation(double x, double y);
-/* separate setting of the coordinates. Can be useful when recalibrating the robot
- * x, y: coordinates in mm */
-void setCurrentX(double x);
-void setCurrentY(double y);
 
 /* set the speed (absolute value) of the speed the robot will travel at
  * speed: the cruise speed in m/s */
@@ -45,6 +41,9 @@ void setCruiseSpeed(double speed);
 void followPath(struct robotPoint* points, int size, double endSpeed, void (*endCallback)(void));
 
 void ffollow(const char * pathName, void (*endCallback)(void));
+
+double getCurrentX();
+double getCurrentY();
 
 #ifdef __cplusplus
 }
