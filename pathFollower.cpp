@@ -399,6 +399,7 @@ void PathFollower::pause()
         //possiblement dangereux, mais devrait fonctionner
         //remainingDistance = remainingDistance-getDistanceSinceMoveStart();
         std::cout<<"Entering pause "<<remainingDistance-getDistanceSinceMoveStart()<<std::endl;
+        updatePositionEndingMove();
         paused = true;
         clearMotionQueue();
         queueSpeedChange(0, nullptr);
