@@ -522,7 +522,7 @@ void PathFollower::updateAngleStartingMove()
 
 void PathFollower::updatePositionEndingMove()
 {
-    double d = getDistanceSinceMoveStart();
+    double d = fabs(getDistanceSinceMoveStart());
     std::cout<<"Position update "<<d<<" "<<prevPosition.first<<" "<<prevPosition.second<<std::endl;
     auto saved = currentPosition;
     currentPosition.first = prevPosition.first+currentDirection.first*d;
