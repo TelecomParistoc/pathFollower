@@ -26,6 +26,7 @@ bool PathFollower::paused = false;
 double PathFollower::remainingDistance = 0;
 
 void PathFollower::setCurrentPosition(double x, double y) {
+    std::cout<<"On remplace la position imaginee "<<curPosX<<" "<<curPosY<<" par "<<x<<" "<<y<<std::endl;
     curPosX = x;
     curPosY = y;
 }
