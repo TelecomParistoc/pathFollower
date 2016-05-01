@@ -2,13 +2,15 @@
 #define PATHFOLLOWER_HPP
 
 
+#include <robotdriver/speedcontroller.h>
+#include <librobot/robot.h>
 #include <functional>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <cmath>
 #include <list>
-#include <robotdriver/speedcontroller.h>
+
 #include "pathfollower.h"
 
 #ifndef M_PI
