@@ -235,6 +235,7 @@ void PathFollower::standardCallback()
             if(recalibrate.front())
             {
                 std::cout<<"moving "<<-distancesRecalibration.front()<<std::endl;
+                setActiveDetectors(none);
                 setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
                 //queueSpeedChangeAt(-distancesRecalibration.front(), -0.1, &PathFollower::disableHeading);
             }
@@ -250,6 +251,7 @@ void PathFollower::standardCallback()
             if(recalibrate.front())
             {
                 std::cout<<"moving "<<distancesRecalibration.front()<<std::endl;
+                setActiveDetectors(none);
                 setRecalibrationCallback(PathFollower::whenBlockedRecalibration);
                 //queueSpeedChangeAt(distancesRecalibration.front(), 0.1, &PathFollower::disableHeading);
             }
@@ -502,6 +504,7 @@ void PathFollower::whenBlockedRecalibration()
         setRobotDistance(0);
         enableHeadingControl(1);
     }
+    setActiveDetectors(all);
     setRecalibrationCallback(NULL);
     rotateCallback(NULL);
 }
