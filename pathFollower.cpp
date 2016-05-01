@@ -371,6 +371,7 @@ void PathFollower::resetPosition(const std::pair<double,double>& v)
 {
     currentPosition = v;
     prevPosition = v;
+    setCurrentLocation(v.first,v.second);
     updateAngleStartingMove();
 }
 
