@@ -416,8 +416,9 @@ void PathFollower::pause()
         std::cout<<"Entering pause "<<remainingDistance-getDistanceSinceMoveStart()<<std::endl;
         updatePositionEndingMove();
         paused = true;
-        clearMotionQueue();
-        queueSpeedChange(0, nullptr);
+        /*clearMotionQueue();
+        queueSpeedChange(0, nullptr);*/
+        forceStop(1);
     }
 }
 
@@ -428,7 +429,8 @@ void PathFollower::continueMoving()
     {
         paused = false;
         std::cout<<"Negative speed "<<negativeSpeed<<" "<<remainingDistance<<std::endl;
-        if(negativeSpeed)
+        forceStop(0);
+        /*if(negativeSpeed)
         {
             queueSpeedChange(-cruiseSpeed, nullptr);
             if(distances.size() == 1 && endSpeed != 0)
@@ -443,7 +445,7 @@ void PathFollower::continueMoving()
                 queueSpeedChangeAt(remainingDistance, endSpeed, &PathFollower::rotateCallback);
             else
                 queueStopAt(remainingDistance, &PathFollower::rotateCallback);
-        }
+        }*/
     }
 }
 
