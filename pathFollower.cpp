@@ -392,7 +392,7 @@ void PathFollower::resetPosition(const std::pair<double,double>& v, bool force)
 std::pair<double,double> PathFollower::getCurrentPos()
 {
     double d = getDistanceSinceMoveStart();
-    std::cout<<"Passed through "<<d<<" "<<prevPosition.first<<";"<<prevPosition.second<<std::endl;
+    //std::cout<<"Passed through "<<d<<" "<<prevPosition.first<<";"<<prevPosition.second<<std::endl;
     currentPosition.first = prevPosition.first+currentDirection.first*d;
     currentPosition.second = prevPosition.second+currentDirection.second*d;
     return currentPosition;
