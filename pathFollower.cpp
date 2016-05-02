@@ -372,7 +372,7 @@ std::array<std::pair<double,double>,2> PathFollower::projectInLand(int x, int y,
 
 void PathFollower::resetPosition(const std::pair<double,double>& v, bool force)
 {
-    if(force||sqrt((v.first-currentPosition.first)*(v.first-currentPosition.first)+(v.second-currentPosition.second)*(v.second-currentPosition.second))<30.)
+    if(force||sqrt((v.first-prevPosition.first)*(v.first-prevPosition.first)+(v.second-prevPosition.second)*(v.second-prevPosition.second))<30.)
     {
         currentPosition = v;
         prevPosition = v;
@@ -381,7 +381,12 @@ void PathFollower::resetPosition(const std::pair<double,double>& v, bool force)
         updateAngleStartingMove();
     }
     else
+    {
+        currentPosition = prevPosition;
+        PathFollower::setCurrentPosition(prevPosition.first,prevPosition.second);
         std::cout<<"=========Reset not allowed========="<<std::endl;
+    }
+    updateAngleStartingMove();
 }
 
 std::pair<double,double> PathFollower::getCurrentPos()
