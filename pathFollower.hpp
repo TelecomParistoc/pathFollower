@@ -54,7 +54,7 @@ class PathFollower
         static bool isOutsideLand(int x, int y);
         static std::array<std::pair<double,double>,2> projectInLand(int x, int y, int prevX, int prevY, int& type, double& dist);
 
-        static void resetPosition(const std::pair<double,double>& v);
+        static void resetPosition(const std::pair<double,double>& v, bool force = true);
         static std::pair<double,double> getCurrentPos();
         static std::pair<double,double> getCurrentDirection();
 

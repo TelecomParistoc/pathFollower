@@ -370,13 +370,16 @@ std::array<std::pair<double,double>,2> PathFollower::projectInLand(int x, int y,
     return res;
 }
 
-void PathFollower::resetPosition(const std::pair<double,double>& v)
+void PathFollower::resetPosition(const std::pair<double,double>& v, bool force = true)
 {
-    currentPosition = v;
-    prevPosition = v;
-    std::cout<<"Reset position"<<std::endl;
-    PathFollower::setCurrentPosition(v.first,v.second);
-    updateAngleStartingMove();
+    if(force||sqrt((v.first-currentPosition.first)*(v.first-currentPosition.first)+(v.second-currentPosition.second)*(v.second-currentPosition.second))<30.)
+    {
+        currentPosition = v;
+        prevPosition = v;
+        std::cout<<"Reset position"<<std::endl;
+        PathFollower::setCurrentPosition(v.first,v.second);
+        updateAngleStartingMove();
+    }
 }
 
 std::pair<double,double> PathFollower::getCurrentPos()
